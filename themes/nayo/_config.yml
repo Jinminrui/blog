@@ -1,0 +1,127 @@
+# header nav
+# 导航菜单路径
+menu:
+  home: /
+  archives: archives
+  tags: tags
+  about: about
+  search: search
+
+# site title
+# 网站的标题
+# title为空时 Hexo/_config.yml 配置有效
+title: Life & Coding
+
+# author profile
+# 图片放置于主题目录下: source/imgaes/
+# 作者信息
+# author为空时 Hexo/_config.yml 配置有效
+profile:
+  author: Keen King
+  logo: /images/favicon.png
+  avatar: /images/avatar.png
+
+# site favicon
+# 图片放置于主题目录下: source/imgaes/
+# 站点图标
+favicon: /images/favicon.png
+
+# social link
+# 更多链接
+social:
+  Github: https://github.com/LOverm
+  Weibo: https://weibo.com/5494660035/profile?topnav=1&wvr=6
+  Zhihu: https://www.zhihu.com/people/keenking-30/activities
+
+# site analytics
+# 站点访问统计
+# 填入百度/谷歌的[ analytics id ]
+baidu_analytics:
+  #636802045446222199ae541e32c8133e
+google_analytics:
+
+# comment
+# 评论系统
+
+# disqus(https://disqus.com/)
+# 填入shortname即可
+disqus:
+  comment: false
+  shortname: lemonreds
+
+# valine(https://github.com/xCss/Valine)
+# 创建 leancloud 应用 获取 id|key 填入即可
+leancloud:
+  comment: true
+  app_id: 7kxu60nBeUEAJKLWktcgg0mz-9Nh9j0Va
+  app_key: N40K3DuKj3WpLWwPJSbmuRyC
+  placeholder: ヾﾉ≧∀≦)o来啊，快活啊!
+  guest_info: nick,mail
+  pageSize: 10
+
+# mob share(http://www.mob.com)
+# 文章分享功能
+mob_share:
+  sharesdk: true
+  shareSDKappkey: 2837ebe4fd6c8
+
+# 支持的分享类型
+share_item:
+  - qq
+  - weixin
+
+# donate
+# 捐赠功能
+# 图片放置于主题目录下: source/imgaes/
+donate:
+  enable: true
+  word:
+  wechat: /images/wechat.png
+  alipay: /images/avatar.png
+
+# toc
+# 全局控制文章的概要是否显示
+# 可以在单个文章设置是否显示toc (参见下方说明)
+toc: true
+
+# mathjax
+# 渲染LateX公式
+# 全局开启后,在你需要显示LateX公式的文章头部增加配置
+# mathjax: true (参见下方说明)
+mathjax:
+  enable: true
+
+# 在你的文章头部支持的配置有:
+# example:
+# ---
+# title: hexo-theme-nayo
+# date: 2018-02-08 21:44:25
+#
+# hide_toc: true | false
+# hide_excerpt: true | false
+# banner: /assets/05.jpg
+# mathjax: true
+# photos:
+# - /assets/01.jpg
+# - /assets/02.jpg
+# - /assets/03.jpg
+# - /assets/04.jpg
+# ---
+
+# 文章详情页面生效的配置
+# hide_toc [boolean] 是否隐藏此文章的[TOC],默认为false
+# hide_excerpt [boolean] 是否隐藏此[文章摘要](摘要只显示在首页,不显示在文章页),默认为false
+# mathjax [boolean] 是否在此文章[渲染LateX公式]
+# photos [array] 文章画廊展示图片
+
+# footer
+# 网站底部信息
+footer:
+  author: Keen King
+  since: 2018
+
+# theme version
+version: 0.3.5
+
+local_search:
+  enable: true

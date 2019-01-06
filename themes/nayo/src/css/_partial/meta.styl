@@ -1,0 +1,47 @@
+//
+// tag 
+//
+.tag-wrap	
+	@extend $tags  
+	display inline-block		
+	margin .4rem .3rem 	
+	padding  2px 12px	
+	&>.tag-name
+		font-size 0.9rem
+	&>.tag-count
+		font-size 0.825rem
+
+//
+// archive
+//
+.archive-count
+	text-align center
+	margin 0 auto
+	margin-bottom 1rem
+	&> .archive-count-inner
+		font-size .85rem
+.archive-part	
+	margin-bottom 1.5rem 	
+	text-align center	
+	& >.archive-part-item
+		font-size 1.2rem
+		color rgba(0,0,0,0.65)
+		letter-spacing 1px
+		transition all .2s ease-in-out
+
+	
+.archive-item			
+	display flex
+	position relative
+	align-items center
+	padding 16px 36px
+	&>.archive-time
+		width 30%
+		font-size 0.8rem
+		color rgba(0,0,0,.65)
+		text-align center
+	&>.archive-title
+		width 70%
+		font-size 1.05rem
+		display inline-block
+		text-align left

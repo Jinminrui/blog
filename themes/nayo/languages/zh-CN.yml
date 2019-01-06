@@ -1,0 +1,33 @@
+Menu:
+  home: 首页
+  categories: 分类
+  tags: 标签
+  archives: 归档
+  about: 关于
+  search: 搜索
+Page:
+  Archives: 归档
+  Categories: 分类
+  Tags: 标签
+  About: 关于
+
+Post: 
+  Donate: 赞赏
+  Share: 分享
+  Prev: older
+  Next: newer
+
+Archive:
+  count: "共有 %d 篇文章"
+  
+Paginator: 
+  Prev: 上一页
+  Next: 下一页
+
+Contents: CONTENT
+ReadMore: 阅读更多
+Untitled: 无标题
+ 
+Search:
+  Sidebar_words: 搜索
+  input_words: 输入你想搜索的
