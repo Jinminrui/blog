@@ -401,7 +401,7 @@ ps 命令查看进程，常用格式：
 - ls /home | tee dir.list
 -
 
-![](/hexo/images/awk.png)
+![](/blog/images/awk.png)
 
 ### 4、备份与压缩
 

@@ -13,8 +13,8 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://www.jinminrui.cn/hexo
-root: /hexo/
+url: http://www.jinminrui.cn/blog
+root: /blog/
 permalink: :year/:month/:day/:id/
 permalink_defaults:
 
@@ -79,7 +79,7 @@ theme: Nayo
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: root@47.100.221.250:/var/repo/hexo_static
+  repo: root@47.100.221.250:/var/repo/blog
   branch: master
 
 search:

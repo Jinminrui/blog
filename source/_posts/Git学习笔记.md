@@ -6,12 +6,12 @@ tags: Git
 
 #git#
 subversion——集中型版本管理系统
-![](/hexo/images/6.jpg)
+![](/blog/images/6.jpg)
 
 <!--more-->
 
 git——分散型版本管理系统
-![](/hexo/images/7.jpg)
+![](/blog/images/7.jpg)
 
 ### Git 基本命令
 

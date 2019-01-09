@@ -27,7 +27,7 @@ tags: Vue.js
 
 ### 2、created 钩子函数和 beforeMount 间的生命周期
 
-![](/hexo/images/1.jpg)
+![](/blog/images/1.jpg)
 
 首先会判断对象是否有 el 选项。如果有的话就继续向下编译，如果没有 el 选项，则停止编译，也就意味着停止了生命周期，直到在该 vue 实例上调用 vm.\$mount(el)。
 **template 参数对生命周期的影响**：
@@ -53,14 +53,14 @@ new Vue({
 ### 3、beforeMount 和 mounted 钩子函数间的生命周期
 
 此时是给 vue 实例对象添加\$el 成员，并且替换掉挂在的 DOM 元素。
-![](/hexo/images/2.jpg)
+![](/blog/images/2.jpg)
 
 ---
 
 ### 4、mounted
 
 在 mounted 之前 h1 中还是通过{{message}}进行占位的，因为此时还有挂在到页面上，还是 JavaScript 中的虚拟 DOM 形式存在的。在 mounted 之后可以看到 h1 中的内容发生了变化。
-![](/hexo/images/3.jpg)
+![](/blog/images/3.jpg)
 
 ---
 
