@@ -1,17 +1,18 @@
 ---
 title: Git学习笔记
-date: 2018-10-12 11:34:40
 tags: Git
+abbrlink: 8520
+date: 2018-10-12 11:34:40
 ---
 
 #git#
 subversion——集中型版本管理系统
-![](/blog/images/6.jpg)
+![](http://ww1.sinaimg.cn/large/005ZR24Xgy1g0rxtc1iw4j30nu07qdgv.jpg)
 
 <!--more-->
 
 git——分散型版本管理系统
-![](/blog/images/7.jpg)
+![](http://ww1.sinaimg.cn/large/005ZR24Xgy1g0rxtm36t4j30o40e475v.jpg)
 
 ### Git 基本命令
 

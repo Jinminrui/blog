@@ -1,7 +1,8 @@
 ---
 title: Unix/Linux系统基础
-date: 2018-12-25 22:52:07
 tags: Unix
+abbrlink: 52302
+date: 2018-12-25 22:52:07
 ---
 
 ## 一、Unix 操作系统基础
@@ -401,7 +402,7 @@ ps 命令查看进程，常用格式：
 - ls /home | tee dir.list
 -
 
-![](/blog/images/awk.png)
+![](http://ww1.sinaimg.cn/large/005ZR24Xgy1g0rxwnaobyj30rc0kmtb3.jpg)
 
 ### 4、备份与压缩
 

@@ -1,22 +1,22 @@
 <div class="post-header">
+  <p class="post-title">
+    <%= page.title|| __('Untitled') %>
+  </p>
 
-	<p class="post-title">	
-		<%= page.title|| __('Untitled') %>
-	</p>
-			
+  <div class="meta-info">
+    <span>
+      <%= date(page.date, "MMM DD, YYYY") %>
+    </span>
 
-	<div class="meta-info">	
-	<span>
-		<%= date(page.date,  "MMM DD, YYYY") %>
-	</span>
+    <% var length = raw_length(post.content) %> <% if ( length > 0 ){%>
+    <i class="iconfont icon-words"></i>
+    <span>
+      <%= length %>
+    </span>
+    <% }%>
 
-	<%  var length = raw_length(post.content) %>
-	<% if ( length > 0 ){%>
-		<i class="iconfont icon-words"></i>
-		<span>
-			<%= length %>
-		</span>
-	<% }%>
-</div>
-
+    <span id="busuanzi_container_page_pv" style="display:none">
+      <span id="busuanzi_value_page_pv"></span>次访问
+    </span>
+  </div>
 </div>
