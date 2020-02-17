@@ -49,7 +49,7 @@ highlight:
 # per_page: Posts displayed per page. (0 = disable pagination)
 # order_by: Posts order. (Order by date descending by default)
 index_generator:
-  path: ''
+  path: ""
   per_page: 10
   order_by: -date
 
@@ -79,7 +79,7 @@ theme: Nayo
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: root@47.100.221.250:/var/repo/blog
+  repo: https://github.com/Jinminrui/blog.git
   branch: master
 
 search:
