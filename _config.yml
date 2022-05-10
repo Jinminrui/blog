@@ -80,7 +80,8 @@ theme: Nayo
 deploy:
   type: git
   repo: https://github.com/Jinminrui/blog.git
-  branch: master
+  branch: gh-pages
+  message: "Site updated"
 
 search:
   path: search.xml

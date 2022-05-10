@@ -72,7 +72,7 @@ function mountWorkInProgressHook(): Hook {
 mountWorkInProgressHook 创建Hook，以链表的形式将 Hook 对象挂在fiber.memoizedState上。
 
 **无论状态 Hook 或副作用 Hook 都按照调用顺序存储在 fiber.memoizedState链表中。**
-![](mount-fiber-memoizedstate.png)
+![fiber.memoizedState链表](https://github.com/7kms/react-illustration-series/raw/main/snapshots/hook-summary/mount-fiber-memoizedstate.png)
 
 ## Hook 数据结构
 从定义来看，Hook 对象共有5个属性：
@@ -81,7 +81,7 @@ mountWorkInProgressHook 创建Hook，以链表的形式将 Hook 对象挂在fibe
 3. **hook.baseQueue**: 存储update对象的环形链表, 只包括高于本次渲染优先级的update对象.
 4. **hook.queue**: 存储update对象的环形链表, 包括所有优先级的update对象.
 5. **hook.next**: next指针, 指向链表中的下一个hook.
-![](hook-linkedlist.png)
+![Hook数据结构](https://github.com/7kms/react-illustration-series/raw/main/snapshots/hook-summary/hook-linkedlist.png)
 所以Hook是一个链表, 单个Hook拥有自己的状态hook.memoizedState和自己的更新队列hook.queue。
 
 ## Hooks状态持久化
