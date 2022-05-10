@@ -116,14 +116,14 @@
 <h2 id="Hooks-的构造"><a href="#Hooks-的构造" class="headerlink" title="Hooks 的构造"></a>Hooks 的构造</h2><p>在一个函数组件中，如果使用了 useState 或者 useEffect等 Hook api，就会就会创建一个与之对应的Hook对象。<br>而useState, useEffect在fiber初次构造时分别对应 <a href="https://github.com/facebook/react/blob/v17.0.2/packages/react-reconciler/src/ReactFiberHooks.old.js#L1113-L1136" target="_blank" rel="noopener">mountState</a> 和 <a href="https://github.com/facebook/react/blob/v17.0.2/packages/react-reconciler/src/ReactFiberHooks.old.js#L1193-L1248" target="_blank" rel="noopener">mountEffect-&gt;mountEffectImpl</a> 。<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mountState</span>&lt;<span class="title">S</span>&gt;(<span class="params"></span></span></span><br><span class="line">  initialState: (() =&gt; S) | S,</span><br><span class="line">): [S, Dispatch&lt;BasicStateAction&lt;S&gt;&gt;] &#123;</span><br><span class="line">  <span class="keyword">const</span> hook = mountWorkInProgressHook();</span><br><span class="line">  <span class="comment">// ...省略部分讨论</span></span><br><span class="line">  <span class="keyword">return</span> [hook.memoizedState, dispatch];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mountEffectImpl</span>(<span class="params">fiberFlags, hookFlags, create, deps</span>): <span class="title">void</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> hook = mountWorkInProgressHook();</span><br><span class="line">  <span class="comment">// ...省略部分不讨论</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>无论 useState，useEffect ，内部都通过mountWorkInProgressHook 创建一个 hook 。<br><figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mountWorkInProgressHook</span>(<span class="params"></span>): <span class="title">Hook</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> hook: Hook = &#123;</span><br><span class="line">    memoizedState: <span class="literal">null</span>,</span><br><span class="line">    baseState: <span class="literal">null</span>,</span><br><span class="line">    baseQueue: <span class="literal">null</span>,</span><br><span class="line">    queue: <span class="literal">null</span>,</span><br><span class="line">    next: <span class="literal">null</span>,</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (workInProgressHook === <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="comment">// 链表中首个hook</span></span><br><span class="line">    currentlyRenderingFiber.memoizedState = workInProgressHook = hook;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// 将hook添加到链表末尾</span></span><br><span class="line">    workInProgressHook = workInProgressHook.next = hook;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> workInProgressHook;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>mountWorkInProgressHook 创建Hook，以链表的形式将 Hook 对象挂在fiber.memoizedState上。</p>
-<p><strong>无论状态 Hook 或副作用 Hook 都按照调用顺序存储在 fiber.memoizedState链表中。</strong><br><img src="mount-fiber-memoizedstate.png" alt></p>
+<p><strong>无论状态 Hook 或副作用 Hook 都按照调用顺序存储在 fiber.memoizedState链表中。</strong><br><img src="https://github.com/7kms/react-illustration-series/raw/main/snapshots/hook-summary/mount-fiber-memoizedstate.png" alt="fiber.memoizedState链表"></p>
 <h2 id="Hook-数据结构"><a href="#Hook-数据结构" class="headerlink" title="Hook 数据结构"></a>Hook 数据结构</h2><p>从定义来看，Hook 对象共有5个属性：</p>
 <ol>
 <li><strong>hook.memoizedState</strong>: 保持在内存中的局部状态.</li>
 <li><strong>hook.baseState</strong>: hook.baseQueue中所有update对象合并之后的状态.</li>
 <li><strong>hook.baseQueue</strong>: 存储update对象的环形链表, 只包括高于本次渲染优先级的update对象.</li>
 <li><strong>hook.queue</strong>: 存储update对象的环形链表, 包括所有优先级的update对象.</li>
-<li><strong>hook.next</strong>: next指针, 指向链表中的下一个hook.<br><img src="hook-linkedlist.png" alt><br>所以Hook是一个链表, 单个Hook拥有自己的状态hook.memoizedState和自己的更新队列hook.queue。</li>
+<li><strong>hook.next</strong>: next指针, 指向链表中的下一个hook.<br><img src="https://github.com/7kms/react-illustration-series/raw/main/snapshots/hook-summary/hook-linkedlist.png" alt="Hook数据结构"><br>所以Hook是一个链表, 单个Hook拥有自己的状态hook.memoizedState和自己的更新队列hook.queue。</li>
 </ol>
 <h2 id="Hooks状态持久化"><a href="#Hooks状态持久化" class="headerlink" title="Hooks状态持久化"></a>Hooks状态持久化</h2><ul>
 <li>以双缓冲技术为基础, 将 current.memoizedState 按照顺序克隆到了workInProgress.memoizedState中。</li>
@@ -204,6 +204,15 @@
 
 
 <nav class="post-footer-nav">
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/41254/" id="post-nav-newer" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">newer</strong>
+           
+          <a class="post-nav-title" href="/blog/posts/41254/">
+          React中setState的同步和异步</a>
+      </a>
+    </div>
   
   
     <div class="post-footer-link">
