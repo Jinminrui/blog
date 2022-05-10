@@ -1,0 +1,348 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  当你在地址栏输入了一行网址…… |   KeenKing的个人博客 </title>
+
+ 
+  
+    <link rel="icon" href="/blog/images/favicon.png">
+  
+
+
+  <link rel="stylesheet" href="/blog/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <head><meta name="generator" content="Hexo 3.9.0">
+  <meta name="referrer" content="no-referrer">
+</head>
+
+<header class="header">
+	
+  <nav class="header-nav">        
+
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-logo">
+      <a href="/blog">
+        <img class="header-logo-img" src="/blog/images/favicon.png">
+      </a>
+    </div>
+
+    <div class="header-menu">          
+              
+          
+            <a class="header-menu-link" id="header-menu-home" href="/blog/">
+              <i class="iconfont icon-home">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-archives" href="/blog/archives">
+              <i class="iconfont icon-archives">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-tags" href="/blog/tags">
+              <i class="iconfont icon-tags">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-about" href="/blog/about">
+              <i class="iconfont icon-about">  
+            </i></a>     
+          
+              
+          
+              <a class="header-menu-link" id="header-menu-search">
+                <i class="iconfont icon-search">  
+              </i></a>
+          
+                  
+    </div>  
+    
+  </nav>
+</header>
+
+   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+  <p class="post-title">
+    当你在地址栏输入了一行网址……
+  </p>
+
+  <div class="meta-info">
+    <span>
+      10月 16, 2018
+    </span>
+
+     
+    <i class="iconfont icon-words"></i>
+    <span>
+      1845
+    </span>
+    
+  </div>
+</div>
+ 
+	 
+
+	  <div class="typo post-content slideDownMin">
+
+		
+
+			
+					<p>当你在浏览器的地址栏输入了一行网址，并回车了之后，浏览器到底做了什么呢？</p>
+<p>先笼统的讲一下：<br>浏览器通过 DNS 解析你输入的网址（ URL ）根据网址中的域名（Domain）部分也就是<code>www.xxxxx.com</code>获取域名对应的IP地址，然后通过基于 TCP/IP 协议的 http 协议发送请求到服务器，服务器响应请求返回数据，浏览器接收数据解析并 渲染 到页面。</p>
+<a id="more"></a>
+<p>我们总结出几个关键词：</p>
+<ul>
+<li>DNS解析</li>
+<li>URL</li>
+<li>TCP/IP</li>
+<li>HTTP协议</li>
+<li>HTTP请求发起和响应</li>
+<li>页面渲染的过程</li>
+</ul>
+<h2 id="DNS解析"><a href="#DNS解析" class="headerlink" title="DNS解析"></a>DNS解析</h2><p>DNS:Domain Name Server，域名服务器。是进行域名(domain name)和与之相对应的IP地址 (IP address)转换的服务器。DNS中保存了一张域名(domain name)和与之相对应的IP地址 (IP address)的表，以解析消息的域名。IP地址其实就是一串乱七八糟的数据用户很难记住，但是域名就不一样了，比如谷歌的google.com，百度的baidu.com 简单易记。<br>所以为了处理这个问题，就需要用域名去映射IP地址。<br>因此，当用户在浏览器输入<a href="https://www.baidu.com" target="_blank" rel="noopener">https://www.baidu.com</a> 回车时，它经历了以下步骤：</p>
+<blockquote>
+<p>1.浏览器根据地址去本身缓存中查找dns解析记录，如果有，则直接返回IP地址，否则浏览器会查找操作系统中（hosts文件）是否有该域名的dns解析记录，如果有则返回。<br>2.如果浏览器缓存和操作系统hosts中均无该域名的dns解析记录，或者已经过期，此时就会向域名服务器发起请求来解析这个域名。<br>3.请求会先到LDNS（本地域名服务器），让它来尝试解析这个域名，如果LDNS也解析不了，则直接到根域名解析器请求解析<br>4.根域名服务器给LDNS返回一个所查询余的主域名服务器（gTLDServer）地址。<br>5.此时LDNS再向上一步返回的gTLD服务器发起解析请求。<br>6.gTLD服务器接收到解析请求后查找并返回此域名对应的Name Server域名服务器的地址，这个Name Server通常就是你注册的域名服务器（比如阿里dns、腾讯dns等）<br>7.Name Server域名服务器会查询存储的域名和IP的映射关系表，正常情况下都根据域名得到目标IP记录，连同一个TTL值返回给DNS Server域名服务器<br>8.返回该域名对应的IP和TTL值，Local DNS Server会缓存这个域名和IP的对应关系，缓存的时间有TTL值控制。<br>9.把解析的结果返回给用户，用户根据TTL值缓存在本地系统缓存中，域名解析过程结束。  </p>
+</blockquote>
+<h2 id="URL"><a href="#URL" class="headerlink" title="URL"></a>URL</h2><p>URL：Uniform Resource Locator 统一资源定位符。说白了就是网络上用来标识具体资源的一个地址，包含了用户查找该资源的信息，HTTP使用它来传输数据和建立连接。<br>一个URL有以下组成部分：</p>
+<pre><code>1. 协议
+2. 服务器地址（域名或IP+端口）
+3. 路径
+4. 文件名
+</code></pre><h2 id="TCP-IP协议"><a href="#TCP-IP协议" class="headerlink" title="TCP/IP协议"></a>TCP/IP协议</h2><p>TCP：Transmission Control Protocol， 传输控制协议，是一种面向连接的、可靠的、基于字节流的传输层通信协议。<br>双方建立TCP连接需要经历三次握手：</p>
+<blockquote>
+<p>1.客户端发送syn包(syn=j)到服务器，并进入SYN_SEND状态，等待服务器确认。<br>2.服务器收到syn包，必须确认客户的SYN（ack=j+1），同时自己也发送一个SYN包（syn=k），即SYN+ACK包，此时服务器进入SYN_RECV状态。<br>3.客户端收到服务器的SYN＋ACK包，向服务器发送确认包ACK(ack=k+1)，此包发送完毕，客户端和服务器进入ESTABLISHED状态，完成三次握手。  </p>
+</blockquote>
+<p>上面几个状态码的解释：</p>
+<blockquote>
+<p>1.SYN:synchronous   建立联机<br>2.ACK:acknowledgement  确认<br>3.SYN_SENT:请求连接<br>4.SYN_RECV:服务端被动打开后,接收到了客户端的SYN并且发送了ACK时的状态。再进一步接收到客户端的ACK就进入ESTABLISHED状态。<br><em>TCP连接时并不携带数据</em></p>
+</blockquote>
+<h2 id="HTTP协议"><a href="#HTTP协议" class="headerlink" title="HTTP协议"></a>HTTP协议</h2><p>HTTP协议：Hypertext Transfer Protocol 也叫超文本传送协议 ，它是一种基于TCP/IP协议栈、在表示层和应用层上的协议（TCP在传输层的协议），通俗一点说就是TCP/IP是位于传输层上的一种协议，用于在网络中传输数据；HTTP协议是应用层协议，基于TCP协议，用于包装数据，程序使用它进行通信，可以简单高效的处理通信中数据的传输和识别处理。</p>
+  	
+					
+	  </div>     
+	  
+
+	<div class="post-footer">
+
+  <div class="post-footer-other">
+      <span class="post-footer-item">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img" src="/blog/images/wechat.png" alt="No Donate Image!">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img" src="/blog/images/avatar.png" alt="No Donate Image!">	
+	</div>
+
+	<span class="donate-word"></span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+      </span>           
+      <span class="post-footer-item">
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=2837ebe4fd6c8"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		<div class="-mob-inner">
+		   			             
+            <a class="iconfont icon-share-qq -mob-share-link"></a>		
+     	   			             
+            <a class="iconfont icon-share-weixin -mob-share-link"></a>		
+     	   
+		</div>
+	</div>	
+
+      </span>           
+  </div>  
+
+  <div class="post-footer-meta">
+        	
+
+        
+          <i class="iconfont icon-tag"></i>     
+            <a class="tag-link" href="/blog/tags/计算机网络/">计算机网络</a>    
+        	
+  </div>
+
+</div>
+
+
+<nav class="post-footer-nav">
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/52136/" id="post-nav-newer" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">newer</strong>
+           
+          <a class="post-nav-title" href="/blog/posts/52136/">
+          聊一聊JavaWeb项目后端和前端的交互</a>
+      </a>
+    </div>
+  
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/48507/" id="post-nav-older" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">older</strong>
+        
+          <a class="post-nav-title" href="/blog/posts/48507/">
+          CSS布局笔记</a>
+      </a>
+    </div>
+  
+</nav>
+ 
+	
+
+
+    <div id="comment">   
+    </div>
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+
+    <script src="//unpkg.com/valine@v1.1.8-beta/dist/Valine.min.js"></script>
+
+    <script>
+        new Valine({
+        av: AV,
+        el: '#comment',
+        notify:false, 
+        verify:false, 
+        app_id: '7kxu60nBeUEAJKLWktcgg0mz-9Nh9j0Va',
+        app_key: 'N40K3DuKj3WpLWwPJSbmuRyC',  
+        path:window.location.pathname, 
+        guest_info:['nick','mail'],
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!'
+        });
+    </script>
+	
+</article>
+
+	<div class="toc-container">
+			<div class="toc-sidebar">
+			<p class="toc-title">
+				CONTENT
+			</p>
+			<div class="toc-list">
+				<ol class="toc-inner"><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#DNS解析"><span class="toc-inner-text">DNS解析</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#URL"><span class="toc-inner-text">URL</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#TCP-IP协议"><span class="toc-inner-text">TCP/IP协议</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#HTTP协议"><span class="toc-inner-text">HTTP协议</span></a></li></ol>
+			</div>
+		</div>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">
+            <span class="search-cancel">
+                <i class="iconfont icon-cancel">
+            </i></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+    <div class="mobile-menu">
+  
+  <img class="mobile-menu-icon" src="/blog/images/favicon.png">
+    
+
+  <a class="mobile-menu-link" href="/blog/">首页
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/archives">归档
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/tags">标签
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/about">关于
+  </a>
+    
+
+  <a class="mobile-menu-link mobile-menu-search" href="#">搜索
+  </a>
+   
+</div>
+        
+    
+
+
+
+     
+     
+
+<footer id="footer">
+  <div class="footer-copyright">
+    &copy;  2018-  2022 Keen King
+    <br>
+
+    Theme by
+    <a href="https://github.com/Lemonreds/hexo-theme-Nayo" target="_blank">Nayo</a>
+  </div>
+</footer>
+   
+
+  
+
+    <script src="/blog/nayo.bundle.js"></script>     
+    
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/blog/js/fireworks.js"></script>
+
+
+  </body>        
+</html>

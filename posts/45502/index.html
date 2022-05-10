@@ -1,0 +1,343 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  将自己的站点升级成HTTPS的（疯狂踩坑）过程 |   KeenKing的个人博客 </title>
+
+ 
+  
+    <link rel="icon" href="/blog/images/favicon.png">
+  
+
+
+  <link rel="stylesheet" href="/blog/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <head><meta name="generator" content="Hexo 3.9.0">
+  <meta name="referrer" content="no-referrer">
+</head>
+
+<header class="header">
+	
+  <nav class="header-nav">        
+
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-logo">
+      <a href="/blog">
+        <img class="header-logo-img" src="/blog/images/favicon.png">
+      </a>
+    </div>
+
+    <div class="header-menu">          
+              
+          
+            <a class="header-menu-link" id="header-menu-home" href="/blog/">
+              <i class="iconfont icon-home">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-archives" href="/blog/archives">
+              <i class="iconfont icon-archives">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-tags" href="/blog/tags">
+              <i class="iconfont icon-tags">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-about" href="/blog/about">
+              <i class="iconfont icon-about">  
+            </i></a>     
+          
+              
+          
+              <a class="header-menu-link" id="header-menu-search">
+                <i class="iconfont icon-search">  
+              </i></a>
+          
+                  
+    </div>  
+    
+  </nav>
+</header>
+
+   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+  <p class="post-title">
+    将自己的站点升级成HTTPS的（疯狂踩坑）过程
+  </p>
+
+  <div class="meta-info">
+    <span>
+      3月 05, 2019
+    </span>
+
+     
+    <i class="iconfont icon-words"></i>
+    <span>
+      1679
+    </span>
+    
+  </div>
+</div>
+ 
+	 
+
+	  <div class="typo post-content slideDownMin">
+
+		
+
+			
+					<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>又是一个阴雨天没有课的下午@(￣-￣)@<br>和舍友打完两把英雄联盟，又打开了掘金开始刷面经。（实习面试很慌啊！）<br>看到<strong>HTTP 协议和 HTTPS 的区别</strong>：</p>
+<ul>
+<li>HTTPS 就是身披 SSL( Secure Socket Layer )外壳的 HTTP，运行于 SSL 上，SSL 运行于 TCP 之上，是添加了加密和认证机制的 HTTP。就是在 HTTP(应用层）和 TCP（传输层）之间添加了一层 SSL 协议。</li>
+<li>HTTPS 默认运行在 443 端口，而 HTTP 默认运行在 80 端口。</li>
+<li>HTTPS 由于需要证书的加密机制，所以安全性更高，但同时 CPU 和内存的消耗也更多。</li>
+<li>HTTPS 使用共享密钥加密和公开密钥加密并用的混合加密机制</li>
+<li>百度和谷歌也会优先收录 HTTPS 站点哦～</li>
+</ul>
+<p>看到这里我不禁想起来，我每次打开自己的站点时候都会看到地址栏旁边有个不安全的标志，看着可是着实让人难受，不如来搞个 HTTPS 吧！</p>
+<a id="more"></a>
+<h2 id="准备-SSL-证书"><a href="#准备-SSL-证书" class="headerlink" title="准备 SSL 证书"></a>准备 SSL 证书</h2><p>我购买的是阿里云的服务器，通过谷歌了解到阿里云是提供免费的 SSL 证书的，在如下的界面购买即可<br><img src="http://ww1.sinaimg.cn/large/005ZR24Xly1g0s3csm5z3j31jg0y2ti7.jpg" alt></p>
+<h2 id="配置-Apache-支持-HTTPS"><a href="#配置-Apache-支持-HTTPS" class="headerlink" title="配置 Apache 支持 HTTPS"></a>配置 Apache 支持 HTTPS</h2><p>前面一顿操作，将获得的证书文件下载到了自己的电脑上<br><img src="http://ww1.sinaimg.cn/large/005ZR24Xly1g0s3i2fsr1j316i0o4dpl.jpg" alt><br>下面开始重头戏，也是踩了不少坑的地方<br>也放一下<a href="https://help.aliyun.com/document_detail/98727.html?spm=a2c4g.11186623.4.4.5b274c07Rzd4SE" target="_blank" rel="noopener">阿里云官方的配置文档</a><br>然而我们自己安装的 Apache 目录和官方的是不一样，许多配置文件都分散到了各个文件中。</p>
+<h3 id="开启-Ubuntu-的-OpenSSL-使-Apache-加载-SSL-模块"><a href="#开启-Ubuntu-的-OpenSSL-使-Apache-加载-SSL-模块" class="headerlink" title="开启 Ubuntu 的 OpenSSL 使 Apache 加载 SSL 模块"></a>开启 Ubuntu 的 OpenSSL 使 Apache 加载 SSL 模块</h3><p>使用命令<code>sudo a2enmod ssl</code>加载 Apache 的 SSL 模块。Apache 加载 SSL 模块后，会在/etc/apache2/sites-available 下生成 default-ssl.conf 文件，我们在终端使用 sudo 权限，通过 vi 编辑器打开。<br><img src="http://ww1.sinaimg.cn/large/005ZR24Xly1g0s6kvj9t7j314610yjzr.jpg" alt><br>这个文件需要做以下修改：</p>
+<ol>
+<li>第一个 VirtualHost 标签 改成 *:443</li>
+<li>ServerName 换成自己的域名</li>
+<li>SSLCertificateFile、SSLCertificateKeyFile、SSLCertificateChainFile 对应的分别是刚刚下载下来的三个文件。<br>完成后:wq 退出<br>然后需要把 default-ssl.conf 映射至/etc/apache2/sites-enabled 文件夹<br>使用命令<code>sudo ln -s /etc/apache2/sites-available/default-ssl.conf /etc/apache2/sites-enabled/001-ssl.conf</code>进行建立软链接操作。<br>官方文档中</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SSLProtocol all -SSLv2 -SSLv3</span><br><span class="line"># 添加SSL协议支持协议，去掉不安全的协议。</span><br><span class="line">SSLCipherSuite HIGH:!RC4:!MD5:!aNULL:!eNULL:!NULL:!DH:!EDH:!EXP:+MEDIUM</span><br><span class="line"># 使用此加密套件。</span><br><span class="line">SSLHonorCipherOrder on</span><br></pre></td></tr></table></figure>
+<p>在<code>/etc/apache2/mods-available/ssl.conf</code>中修改<br>最后重新加载 Apache 配置文件：<code>sudo /etc/init.d/apache2 force-reload</code><br>重启 Apache 服务：<code>sudo /etc/init.d/apache2 restart</code></p>
+<h3 id="HTTP-重定向至-HTTPS"><a href="#HTTP-重定向至-HTTPS" class="headerlink" title="HTTP 重定向至 HTTPS"></a>HTTP 重定向至 HTTPS</h3><p>使用命令：<code>sudo a2enmod rewrite</code>加载 Apache 的 rewrite 模块<br>打开 <code>/etc/apache2/apache2.conf</code>修改如下代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;Directory /var/www/&gt;</span><br><span class="line">        Options FollowSymLinks</span><br><span class="line">        AllowOverride ALL</span><br><span class="line">        Require all granted</span><br><span class="line">&lt;/Directory&gt;</span><br></pre></td></tr></table></figure>
+<p>然后进入你的网站根目录，使用命令 touch.htaccess 来创建.htaccess 文件<br>修改如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">RewriteEngine on</span><br><span class="line">RewriteCond  %&#123;HTTPS&#125; !=on</span><br><span class="line">RewriteRule  ^(.*) https://%&#123;SERVER_NAME&#125;$1 [L,R]</span><br></pre></td></tr></table></figure>
+<p>然后重启服务器，测试我的博客网站咯～<br><img src="http://ww1.sinaimg.cn/large/005ZR24Xly1g0s7csk8cmj31z0160aoq.jpg" alt><br>嘻嘻，大功告成！</p>
+  	
+					
+	  </div>     
+	  
+
+	<div class="post-footer">
+
+  <div class="post-footer-other">
+      <span class="post-footer-item">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img lazyload" src="/blog/images/placeholder.png" alt="No Donate Image!" data-src="/blog/images/wechat.png">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img lazyload" src="/blog/images/placeholder.png" alt="No Donate Image!" data-src="/blog/images/avatar.png">	
+	</div>
+
+	<span class="donate-word"></span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+      </span>           
+      <span class="post-footer-item">
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=2837ebe4fd6c8"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		<div class="-mob-inner">
+		   			             
+            <a class="iconfont icon-share-qq -mob-share-link"></a>		
+     	   			             
+            <a class="iconfont icon-share-weixin -mob-share-link"></a>		
+     	   
+		</div>
+	</div>	
+
+      </span>           
+  </div>  
+
+  <div class="post-footer-meta">
+        	
+
+        
+          <i class="iconfont icon-tag"></i>     
+            <a class="tag-link" href="/blog/tags/技术宅/">技术宅</a>    
+        	
+  </div>
+
+</div>
+
+
+<nav class="post-footer-nav">
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/37539/" id="post-nav-newer" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">newer</strong>
+           
+          <a class="post-nav-title" href="/blog/posts/37539/">
+          （面经）腾讯一面</a>
+      </a>
+    </div>
+  
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/60440/" id="post-nav-older" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">older</strong>
+        
+          <a class="post-nav-title" href="/blog/posts/60440/">
+          终于搞懂了！八大排序算法^ _ ^</a>
+      </a>
+    </div>
+  
+</nav>
+ 
+	
+
+
+    <div id="comment">   
+    </div>
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+
+    <script src="//unpkg.com/valine@v1.1.8-beta/dist/Valine.min.js"></script>
+
+    <script>
+        new Valine({
+        av: AV,
+        el: '#comment',
+        notify:false, 
+        verify:false, 
+        app_id: '7kxu60nBeUEAJKLWktcgg0mz-9Nh9j0Va',
+        app_key: 'N40K3DuKj3WpLWwPJSbmuRyC',  
+        path:window.location.pathname, 
+        guest_info:['nick','mail'],
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!'
+        });
+    </script>
+	
+</article>
+
+	<div class="toc-container">
+			<div class="toc-sidebar">
+			<p class="toc-title">
+				CONTENT
+			</p>
+			<div class="toc-list">
+				<ol class="toc-inner"><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#前言"><span class="toc-inner-text">前言</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#准备-SSL-证书"><span class="toc-inner-text">准备 SSL 证书</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#配置-Apache-支持-HTTPS"><span class="toc-inner-text">配置 Apache 支持 HTTPS</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#开启-Ubuntu-的-OpenSSL-使-Apache-加载-SSL-模块"><span class="toc-inner-text">开启 Ubuntu 的 OpenSSL 使 Apache 加载 SSL 模块</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#HTTP-重定向至-HTTPS"><span class="toc-inner-text">HTTP 重定向至 HTTPS</span></a></li></ol></li></ol>
+			</div>
+		</div>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">
+            <span class="search-cancel">
+                <i class="iconfont icon-cancel">
+            </i></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+    <div class="mobile-menu">
+  
+  <img class="mobile-menu-icon lazyload" src="/blog/images/placeholder.png" data-src="/blog/images/favicon.png">
+    
+
+  <a class="mobile-menu-link" href="/blog/">首页
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/archives">归档
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/tags">标签
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/about">关于
+  </a>
+    
+
+  <a class="mobile-menu-link mobile-menu-search" href="#">搜索
+  </a>
+   
+</div>
+        
+    
+
+
+
+     
+     
+
+<footer id="footer">
+  <div class="footer-copyright">
+    &copy;  2018-  2022 Keen King
+    <br>
+
+    Theme by
+    <a href="https://github.com/Lemonreds/hexo-theme-Nayo" target="_blank">Nayo</a>
+  </div>
+</footer>
+   
+
+  
+
+    <script src="/blog/nayo.bundle.js"></script>     
+    
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/blog/js/fireworks.js"></script>
+
+
+  </body>        
+</html>

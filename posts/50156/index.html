@@ -1,0 +1,358 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  JavaScript——闭包 |   KeenKing的个人博客 </title>
+
+ 
+  
+    <link rel="icon" href="/blog/images/favicon.png">
+  
+
+
+  <link rel="stylesheet" href="/blog/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <head><meta name="generator" content="Hexo 3.9.0">
+  <meta name="referrer" content="no-referrer">
+</head>
+
+<header class="header">
+	
+  <nav class="header-nav">        
+
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-logo">
+      <a href="/blog">
+        <img class="header-logo-img" src="/blog/images/favicon.png">
+      </a>
+    </div>
+
+    <div class="header-menu">          
+              
+          
+            <a class="header-menu-link" id="header-menu-home" href="/blog/">
+              <i class="iconfont icon-home">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-archives" href="/blog/archives">
+              <i class="iconfont icon-archives">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-tags" href="/blog/tags">
+              <i class="iconfont icon-tags">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-about" href="/blog/about">
+              <i class="iconfont icon-about">  
+            </i></a>     
+          
+              
+          
+              <a class="header-menu-link" id="header-menu-search">
+                <i class="iconfont icon-search">  
+              </i></a>
+          
+                  
+    </div>  
+    
+  </nav>
+</header>
+
+   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+  <p class="post-title">
+    JavaScript——闭包
+  </p>
+
+  <div class="meta-info">
+    <span>
+      1月 30, 2019
+    </span>
+
+     
+    <i class="iconfont icon-words"></i>
+    <span>
+      2077
+    </span>
+    
+  </div>
+</div>
+ 
+	 
+
+	  <div class="typo post-content slideDownMin">
+
+		
+
+			
+					<h2 id="什么是闭包"><a href="#什么是闭包" class="headerlink" title="什么是闭包"></a>什么是闭包</h2><p>MDN 对闭包的定义为：</p>
+<blockquote>
+<p>闭包是指那些能够访问自由变量的函数<br>自由变量是指在函数中使用的，但既不是函数参数也不是函数的局部变量的变量。</p>
+</blockquote>
+<p>由此，我们可以看出闭包共有两部分组成：<br><strong>闭包 = 函数 + 函数能够访问的自由变量</strong></p>
+<a id="more"></a>
+<blockquote>
+<p>ECMAScript 中，闭包指的是：<br>1、从理论角度：所有的函数。因为它们都在创建的时候就将上层上下文的数据保存起来了。哪怕是简单的全局变量也是如此，因为函数中访问全局变量就相当于是在访问自由变量，这个时候使用最外层的作用域。<br>2、从实践角度：以下函数才算是闭包：<br>（1）即使创建它的上下文已经销毁，它仍然存在（比如，内部函数从父函数中返回）<br>（2）在代码中引用了自由变量</p>
+</blockquote>
+<h2 id="举例分析"><a href="#举例分析" class="headerlink" title="举例分析"></a>举例分析</h2><p>在《JavaScript 权威指南》中关于闭包有这样一个例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var scope = &quot;global scope&quot;;</span><br><span class="line">function checkscope()&#123;</span><br><span class="line">    var scope = &quot;local scope&quot;;</span><br><span class="line">    function f()&#123;</span><br><span class="line">        return scope;</span><br><span class="line">    &#125;</span><br><span class="line">    return f;</span><br><span class="line">&#125;</span><br><span class="line">var foo = checkscope();</span><br><span class="line">foo();</span><br></pre></td></tr></table></figure>
+<ol>
+<li>根据之前所学习的，不难分析出这段代码的执行过程</li>
+<li>进入全局代码，创建全局执行上下文，全局执行上下文压入执行上下文栈</li>
+<li>全局执行上下文初始化</li>
+<li>执行 checkscope 函数，创建 checkscope 函数执行上下文，checkscope 执行上下文被压入执行上下文栈</li>
+<li>checkscope 执行上下文初始化，创建变量对象、作用域链、this 等</li>
+<li>checkscope 函数执行完毕，checkscope 执行上下文从执行上下文栈中弹出</li>
+<li>执行 f 函数，创建 f 函数执行上下文，f 执行上下文被压入执行上下文栈</li>
+<li>f 执行上下文初始化，创建变量对象、作用域链、this 等</li>
+<li>f 函数执行完毕，f 函数上下文从执行上下文栈中弹出</li>
+</ol>
+<p>可以发现，当 f 函数执行的时候，checkscope 函数上下文已经从执行上下文栈弹出了，那怎么怎么还会读取到 checkscope 作用域下的 scope 值呢？<br>我们分析一下 f 的作用域链可以发现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fContext = &#123;</span><br><span class="line">    Scope: [AO, checkscopeContext.AO, globalContext.VO],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就是因为这个作用域链，f 函数依然可以读取到 checkscopeContext.AO 的值，说明当 f 函数引用了 checkscopeContext.AO 中的值的时候，即使 checkscopeContext 被销毁了，但是 JavaScript 依然会让 checkscopeContext.AO 活在内存中，f 函数依然可以通过 f 函数的作用域链找到它，正是因为 JavaScript 做到了这一点，从而实现了闭包这个概念。</p>
+<h2 id="一道面试题"><a href="#一道面试题" class="headerlink" title="一道面试题"></a>一道面试题</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">var data = [];</span><br><span class="line"></span><br><span class="line">for (var i = 0; i &lt; 3; i++) &#123;</span><br><span class="line">  data[i] = function () &#123;</span><br><span class="line">    console.log(i);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">data[0]();</span><br><span class="line">data[1]();</span><br><span class="line">data[2]();</span><br></pre></td></tr></table></figure>
+<p>答案是都是 3。<br>当执行到 data[0] 函数之前，此时全局上下文的 VO 为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">globalContext = &#123;</span><br><span class="line">    VO: &#123;</span><br><span class="line">        data: [...],</span><br><span class="line">        i: 3</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当执行 data[0] 函数的时候，data[0] 函数的执行上下文的活动对象中没有 i，所以会从 globalContext.VO 中查找，i 为 3，所以打印的结果就是 3。<br>data[1] 和 data[2] 是一样的道理。</p>
+<p>那么如何得到我们想要的结果呢？</p>
+<ul>
+<li>第一种方法：可以将 var 改成 ES6 的 let</li>
+<li>第二种方法：使用闭包</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">var data = [];</span><br><span class="line"></span><br><span class="line">for (var i = 0; i &lt; 3; i++) &#123;</span><br><span class="line">  data[i] = (function (i) &#123;</span><br><span class="line">        return function()&#123;</span><br><span class="line">            console.log(i);</span><br><span class="line">        &#125;</span><br><span class="line">  &#125;)(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">data[0]();</span><br><span class="line">data[1]();</span><br><span class="line">data[2]();</span><br></pre></td></tr></table></figure>
+<p>当执行 data[0] 函数的时候，data[0] 函数的作用域链发生了改变</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">data[0]Context = &#123;</span><br><span class="line">    Scope: [AO, 匿名函数Context.AO globalContext.VO]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>匿名函数执行上下文的 AO 为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">匿名函数Context = &#123;</span><br><span class="line">    AO: &#123;</span><br><span class="line">        arguments: &#123;</span><br><span class="line">            0: 0,</span><br><span class="line">            length: 1</span><br><span class="line">        &#125;,</span><br><span class="line">        i: 0</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>data[0]Context 的 AO 并没有 i 值，所以会沿着作用域链从匿名函数 Context.AO 中查找，这时候就会找 i 为 0，找到了就不会往 globalContext.VO 中查找了，即使 globalContext.VO 也有 i 的值(值为 3)，所以打印的结果就是 0。</p>
+  	
+					
+	  </div>     
+	  
+
+	<div class="post-footer">
+
+  <div class="post-footer-other">
+      <span class="post-footer-item">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img" src="/blog/images/wechat.png" alt="No Donate Image!">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img" src="/blog/images/avatar.png" alt="No Donate Image!">	
+	</div>
+
+	<span class="donate-word"></span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+      </span>           
+      <span class="post-footer-item">
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=2837ebe4fd6c8"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		<div class="-mob-inner">
+		   			             
+            <a class="iconfont icon-share-qq -mob-share-link"></a>		
+     	   			             
+            <a class="iconfont icon-share-weixin -mob-share-link"></a>		
+     	   
+		</div>
+	</div>	
+
+      </span>           
+  </div>  
+
+  <div class="post-footer-meta">
+        	
+
+        
+          <i class="iconfont icon-tag"></i>     
+            <a class="tag-link" href="/blog/tags/JavaScript原理/">JavaScript原理</a>    
+        	
+  </div>
+
+</div>
+
+
+<nav class="post-footer-nav">
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/15261/" id="post-nav-newer" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">newer</strong>
+           
+          <a class="post-nav-title" href="/blog/posts/15261/">
+          JavaScript运行机制：Event Loop</a>
+      </a>
+    </div>
+  
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/52497/" id="post-nav-older" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">older</strong>
+        
+          <a class="post-nav-title" href="/blog/posts/52497/">
+          JavaScript——作用域链</a>
+      </a>
+    </div>
+  
+</nav>
+ 
+	
+
+
+    <div id="comment">   
+    </div>
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+
+    <script src="//unpkg.com/valine@v1.1.8-beta/dist/Valine.min.js"></script>
+
+    <script>
+        new Valine({
+        av: AV,
+        el: '#comment',
+        notify:false, 
+        verify:false, 
+        app_id: '7kxu60nBeUEAJKLWktcgg0mz-9Nh9j0Va',
+        app_key: 'N40K3DuKj3WpLWwPJSbmuRyC',  
+        path:window.location.pathname, 
+        guest_info:['nick','mail'],
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!'
+        });
+    </script>
+	
+</article>
+
+	<div class="toc-container">
+			<div class="toc-sidebar">
+			<p class="toc-title">
+				CONTENT
+			</p>
+			<div class="toc-list">
+				<ol class="toc-inner"><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#什么是闭包"><span class="toc-inner-text">什么是闭包</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#举例分析"><span class="toc-inner-text">举例分析</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#一道面试题"><span class="toc-inner-text">一道面试题</span></a></li></ol>
+			</div>
+		</div>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">
+            <span class="search-cancel">
+                <i class="iconfont icon-cancel">
+            </i></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+    <div class="mobile-menu">
+  
+  <img class="mobile-menu-icon" src="/blog/images/favicon.png">
+    
+
+  <a class="mobile-menu-link" href="/blog/">首页
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/archives">归档
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/tags">标签
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/about">关于
+  </a>
+    
+
+  <a class="mobile-menu-link mobile-menu-search" href="#">搜索
+  </a>
+   
+</div>
+        
+    
+
+
+
+     
+     
+
+<footer id="footer">
+  <div class="footer-copyright">
+    &copy;  2018-  2022 Keen King
+    <br>
+
+    Theme by
+    <a href="https://github.com/Lemonreds/hexo-theme-Nayo" target="_blank">Nayo</a>
+  </div>
+</footer>
+   
+
+  
+
+    <script src="/blog/nayo.bundle.js"></script>     
+    
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/blog/js/fireworks.js"></script>
+
+
+  </body>        
+</html>

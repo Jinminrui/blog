@@ -1,0 +1,347 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  一篇简单易懂的Vue响应式原理介绍 |   KeenKing的个人博客 </title>
+
+ 
+  
+    <link rel="icon" href="/blog/images/favicon.png">
+  
+
+
+  <link rel="stylesheet" href="/blog/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <head><meta name="generator" content="Hexo 3.9.0">
+  <meta name="referrer" content="no-referrer">
+</head>
+
+<header class="header">
+	
+  <nav class="header-nav">        
+
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-logo">
+      <a href="/blog">
+        <img class="header-logo-img" src="/blog/images/favicon.png">
+      </a>
+    </div>
+
+    <div class="header-menu">          
+              
+          
+            <a class="header-menu-link" id="header-menu-home" href="/blog/">
+              <i class="iconfont icon-home">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-archives" href="/blog/archives">
+              <i class="iconfont icon-archives">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-tags" href="/blog/tags">
+              <i class="iconfont icon-tags">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-about" href="/blog/about">
+              <i class="iconfont icon-about">  
+            </i></a>     
+          
+              
+          
+              <a class="header-menu-link" id="header-menu-search">
+                <i class="iconfont icon-search">  
+              </i></a>
+          
+                  
+    </div>  
+    
+  </nav>
+</header>
+
+   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+  <p class="post-title">
+    一篇简单易懂的Vue响应式原理介绍
+  </p>
+
+  <div class="meta-info">
+    <span>
+      3月 12, 2019
+    </span>
+
+     
+    <i class="iconfont icon-words"></i>
+    <span>
+      1323
+    </span>
+    
+  </div>
+</div>
+ 
+	 
+
+	  <div class="typo post-content slideDownMin">
+
+		
+
+			
+					<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在学习 Vue 的源码，Vue 响应式原理在面试中也是经常会被问到的一个问题，在跟着慕课网黄老师学习源码的过程中，发现源码有点难懂（哭）。最近在网上看了几片介绍响应式原理的文章，在这里以一种通俗易懂的方式记录一下。</p>
+<a id="more"></a>
+<h2 id="什么是响应式原理"><a href="#什么是响应式原理" class="headerlink" title="什么是响应式原理"></a>什么是响应式原理</h2><p>我们都知道，Vue.js 是由数据驱动 UI 变化的框架，也即是说，数据发生改变的时候，视图会重新渲染，匹配更新为最新的值。这就是响应式，只要在 Vue 实例中声明过的数据，那么这个数据就是响应式的。<br>我们可以提出三个问题：</p>
+<ol>
+<li>Vue 是怎么知道数据改变？</li>
+<li>Vue 在数据改变时，怎么知道通知哪些视图更新？</li>
+<li>Vue 在数据改变时，视图怎么知道什么时候更新？<br>在 Vue 中对应着三个问题的解决方案关键词分别是</li>
+<li>Object.defineProperty</li>
+<li>依赖收集</li>
+<li>派发更新。<br>我们一一解释这三个关键词。</li>
+</ol>
+<h2 id="Object-defineProperty"><a href="#Object-defineProperty" class="headerlink" title="Object.defineProperty"></a>Object.defineProperty</h2><p>这个方法，是 Vue 响应式系统的精髓，骨髓，脑髓（核心呐！）<br>使用 Object.defineProperty 可以为对象中的每一个属性，设置 get 和 set 方法。<br><em>get 和 set 又他喵是什么鬼？</em><br>get 值是一个函数，当属性被访问时，会触发 get 函数<br>set 值同样是一个函数，当属性被赋值时，会触发 set 函数<br>现在可以解答第一个问题了：<br>在 Vue 中，属性的 set 方法被做了手脚，当数据改变时，触发属性的 set 方法，便能知道数据发生了改变。</p>
+<h2 id="依赖收集"><a href="#依赖收集" class="headerlink" title="依赖收集"></a>依赖收集</h2><p>简单的说，data 中的每一个属性都有一个数组，保存着谁依赖（使用）着他。<br>比如页面 A 中的<code>&lt;div&gt;&lt;/div&gt;</code>，此时页面 A 就存在于 name 的后宫中，实际上，会依赖 name 的地方，不只是页面，还会有 computed，watch 等等。这就是依赖收集，把依赖了我（使用了我的东西），统统保存起来。</p>
+<p>实际上，在 Vue 中，name 属性，使用了 一个 dep 保存了页面 A 这个依赖，而保存的实际上是页面 A 的 Watcher。<br>每个 Vue 实例都会拥有一个专属的 watcher，可用于实例更新。</p>
+<p><strong>总结一下：</strong></p>
+<ol>
+<li>data 中每个声明的属性，都会有一个 专属的依赖收集器 subs</li>
+<li>当页面使用到某个属性时，页面的 watcher 就会被放到依赖收集器 subs 中</li>
+</ol>
+<p><em>那么什么时候进行依赖收集呢？</em><br>那就是通过上面讲的 get 函数啦！当页面读取了 name 时，就会触发 name 的 get 函数，此时 name 就会保存页面的 watcher 了～</p>
+<h2 id="派发更新"><a href="#派发更新" class="headerlink" title="派发更新"></a>派发更新</h2><p>派发更新就是在数据改变之后通知所有的依赖进行更新，上面我们了解到每一个页面都会保存一个依赖收集器 subs，这个依赖收集器就是用来在数据变化时通知更新的。</p>
+<p><em>啥时候派发更新呢？</em><br>还是以上面的例子<br>当 name 改变的时候，name 会遍历自己的依赖收集器 subs，逐个通知 watcher，让 watcher 完成更新<br>这里 name 会通知页面 A，页面 A 重新读取新的 name ，然后完成渲染</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>Object.defineProperty  -  get ，用于   依赖收集</li>
+<li>Object.defineProperty  -  set，用于 依赖更新</li>
+<li>每个 data  声明的属性，都拥有一个的专属依赖收集器  subs</li>
+<li>依赖收集器  subs  保存的依赖是  watcher</li>
+<li>watcher 可用于 进行视图更新</li>
+</ol>
+  	
+					
+	  </div>     
+	  
+
+	<div class="post-footer">
+
+  <div class="post-footer-other">
+      <span class="post-footer-item">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img" src="/blog/images/wechat.png" alt="No Donate Image!">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img" src="/blog/images/avatar.png" alt="No Donate Image!">	
+	</div>
+
+	<span class="donate-word"></span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+      </span>           
+      <span class="post-footer-item">
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=2837ebe4fd6c8"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		<div class="-mob-inner">
+		   			             
+            <a class="iconfont icon-share-qq -mob-share-link"></a>		
+     	   			             
+            <a class="iconfont icon-share-weixin -mob-share-link"></a>		
+     	   
+		</div>
+	</div>	
+
+      </span>           
+  </div>  
+
+  <div class="post-footer-meta">
+        	
+
+        
+          <i class="iconfont icon-tag"></i>     
+            <a class="tag-link" href="/blog/tags/Vue-js/">Vue.js</a>    
+        	
+  </div>
+
+</div>
+
+
+<nav class="post-footer-nav">
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/25817/" id="post-nav-newer" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">newer</strong>
+           
+          <a class="post-nav-title" href="/blog/posts/25817/">
+          实现一个小小的输出特效</a>
+      </a>
+    </div>
+  
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/37539/" id="post-nav-older" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">older</strong>
+        
+          <a class="post-nav-title" href="/blog/posts/37539/">
+          （面经）腾讯一面</a>
+      </a>
+    </div>
+  
+</nav>
+ 
+	
+
+
+    <div id="comment">   
+    </div>
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+
+    <script src="//unpkg.com/valine@v1.1.8-beta/dist/Valine.min.js"></script>
+
+    <script>
+        new Valine({
+        av: AV,
+        el: '#comment',
+        notify:false, 
+        verify:false, 
+        app_id: '7kxu60nBeUEAJKLWktcgg0mz-9Nh9j0Va',
+        app_key: 'N40K3DuKj3WpLWwPJSbmuRyC',  
+        path:window.location.pathname, 
+        guest_info:['nick','mail'],
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!'
+        });
+    </script>
+	
+</article>
+
+	<div class="toc-container">
+			<div class="toc-sidebar">
+			<p class="toc-title">
+				CONTENT
+			</p>
+			<div class="toc-list">
+				<ol class="toc-inner"><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#前言"><span class="toc-inner-text">前言</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#什么是响应式原理"><span class="toc-inner-text">什么是响应式原理</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#Object-defineProperty"><span class="toc-inner-text">Object.defineProperty</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#依赖收集"><span class="toc-inner-text">依赖收集</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#派发更新"><span class="toc-inner-text">派发更新</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#总结"><span class="toc-inner-text">总结</span></a></li></ol>
+			</div>
+		</div>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">
+            <span class="search-cancel">
+                <i class="iconfont icon-cancel">
+            </i></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+    <div class="mobile-menu">
+  
+  <img class="mobile-menu-icon" src="/blog/images/favicon.png">
+    
+
+  <a class="mobile-menu-link" href="/blog/">首页
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/archives">归档
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/tags">标签
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/about">关于
+  </a>
+    
+
+  <a class="mobile-menu-link mobile-menu-search" href="#">搜索
+  </a>
+   
+</div>
+        
+    
+
+
+
+     
+     
+
+<footer id="footer">
+  <div class="footer-copyright">
+    &copy;  2018-  2022 Keen King
+    <br>
+
+    Theme by
+    <a href="https://github.com/Lemonreds/hexo-theme-Nayo" target="_blank">Nayo</a>
+  </div>
+</footer>
+   
+
+  
+
+    <script src="/blog/nayo.bundle.js"></script>     
+    
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/blog/js/fireworks.js"></script>
+
+
+  </body>        
+</html>

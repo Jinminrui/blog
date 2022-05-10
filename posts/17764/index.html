@@ -1,0 +1,392 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  操作系统——进程管理 |   KeenKing的个人博客 </title>
+
+ 
+  
+    <link rel="icon" href="/blog/images/favicon.png">
+  
+
+
+  <link rel="stylesheet" href="/blog/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <head><meta name="generator" content="Hexo 3.9.0">
+  <meta name="referrer" content="no-referrer">
+</head>
+
+<header class="header">
+	
+  <nav class="header-nav">        
+
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-logo">
+      <a href="/blog">
+        <img class="header-logo-img" src="/blog/images/favicon.png">
+      </a>
+    </div>
+
+    <div class="header-menu">          
+              
+          
+            <a class="header-menu-link" id="header-menu-home" href="/blog/">
+              <i class="iconfont icon-home">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-archives" href="/blog/archives">
+              <i class="iconfont icon-archives">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-tags" href="/blog/tags">
+              <i class="iconfont icon-tags">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-about" href="/blog/about">
+              <i class="iconfont icon-about">  
+            </i></a>     
+          
+              
+          
+              <a class="header-menu-link" id="header-menu-search">
+                <i class="iconfont icon-search">  
+              </i></a>
+          
+                  
+    </div>  
+    
+  </nav>
+</header>
+
+   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+  <p class="post-title">
+    操作系统——进程管理
+  </p>
+
+  <div class="meta-info">
+    <span>
+      1月 09, 2019
+    </span>
+
+     
+    <i class="iconfont icon-words"></i>
+    <span>
+      3319
+    </span>
+    
+  </div>
+</div>
+ 
+	 
+
+	  <div class="typo post-content slideDownMin">
+
+		
+
+			
+					<h2 id="进程的基本概念"><a href="#进程的基本概念" class="headerlink" title="进程的基本概念"></a>进程的基本概念</h2><h3 id="程序的顺序执行及其特征"><a href="#程序的顺序执行及其特征" class="headerlink" title="程序的顺序执行及其特征"></a>程序的顺序执行及其特征</h3><ul>
+<li>程序：一个在时间上按严格次序、顺序执行的操作序列</li>
+<li>程序的顺序执行：一个具有独立功能的程序独占处理剂，直到得到最终结果<br><strong>特征</strong>：<br>顺序性：一个程序的各个部分的执行，严格地按照某种先后次序执行；<br>封闭性：程序在封闭的环境下运行，即程序运行时独占全部系统资源；<br>可再现性：只要程序执行时的环境和初始条件相同，当程序重复执行时，不论它是从头到尾不停顿地执行，还是“停停走走”地执行，都将获得相同的结果。<a id="more"></a>
+</li>
+</ul>
+<h3 id="前趋图（DAG）"><a href="#前趋图（DAG）" class="headerlink" title="前趋图（DAG）"></a>前趋图（DAG）</h3><p>前趋图是<strong>有向无循环</strong>图</p>
+<h3 id="程序的并发执行及其特征"><a href="#程序的并发执行及其特征" class="headerlink" title="程序的并发执行及其特征"></a>程序的并发执行及其特征</h3><ul>
+<li>不可再现性：由于程序的并发执行，打破了由另一程序独占系统<br> 资源的封闭性，因而破坏了可再现性。</li>
+<li>间断性：程序并发执行时，由于它们共享资源或程序之间相互合作完<br>成一项共同任务，因而使程序之间相互制约。</li>
+<li>通信性：对于相互合作的程序，为了更有效地协调运行，相互之间进<br> 行通信。</li>
+<li>独立性：并发程序在运行过程中，既然是作为一个独立的运行实体，<br>它也必然具有作为一个单位去获得资源的独立性。</li>
+<li>程序和进程的区别：<br>进程就是一个活跃着的程序（动态的）,即:已经被放入了系统调度队列当中了,占有一定的系统资源的程序.</li>
+</ul>
+<h3 id="进程的特征与状态"><a href="#进程的特征与状态" class="headerlink" title="进程的特征与状态"></a>进程的特征与状态</h3><ul>
+<li>结构性：程序块、数据块、进程控制块（PCB）<br>进程实体=程序段+相关的数据段+PCB<br>进程创建和撤销都是创建和撤销的 PCB</li>
+<li>动态性：进程是程序在数据集合上的一次执行过程，有生命周期：由创建而产生、由调度而执行、由事件而等待、由撤销而消亡。</li>
+<li>并发性：多个进程实体同存于内存中，能在一段时间内同时运行。是进程的重 要特征。</li>
+<li>独立性：进程是系统中资源分配、保护和调度的基本单位</li>
+<li><p>异步性：进程按各自独立的，不可预知的速度向前推进</p>
+</li>
+<li><p><strong>进程的状态转换</strong><br>三态转换图<br><img src="http://ww1.sinaimg.cn/large/005ZR24Xly1g0rxz2nch0j31320tmwtq.jpg" alt><br><strong>挂起</strong>：进程被交换到外存，状态变为挂起状态<br>进程进入挂起状态是由于操作系统、父进程或进程本身阻止它的运行。<br>结束进程挂起状态的命令只能通过操作系统或父进程发出。<br><img src="http://ww1.sinaimg.cn/large/005ZR24Xly1g0rxzo4esaj31320tmnjp.jpg" alt></p>
+</li>
+</ul>
+<h3 id="进程控制块（PCB）"><a href="#进程控制块（PCB）" class="headerlink" title="进程控制块（PCB）"></a>进程控制块（PCB）</h3><ul>
+<li>系统为了管理进程设置的一个专门的数据结构，存放了用于描述该进程情况和控制进程运行所需的全部信息。</li>
+<li>系统利用 PCB 来控制和管理进程，所以 PCB 是系统感知进程存在的唯一标志</li>
+<li>进程与 PCB 是一一对应的</li>
+<li>作用：使一个在多道程序环境下不能独立运行的程序（含数据），成为一个独立运行的基本单位。</li>
+</ul>
+<hr>
+<h2 id="进程同步"><a href="#进程同步" class="headerlink" title="进程同步"></a>进程同步</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
+<li>进程互斥：指在多道程序环境下，每次只允许一个进程对临界资源进行访问。</li>
+<li>进程同步：指多个相关进程在执行次序上的协调</li>
+<li>临界资源:一次仅供一个进程使用的资源。</li>
+<li>在进程中涉及到临界资源的程序段叫临界区</li>
+<li>多个进程的临界区称为相关临界区</li>
+<li>进程的同步机制 ── 信号量及 P.V 操作（解决进程同步,互斥问题）</li>
+</ul>
+<h3 id="进程间的两种制约关系"><a href="#进程间的两种制约关系" class="headerlink" title="进程间的两种制约关系"></a>进程间的两种制约关系</h3><ul>
+<li><p>直接作用(相互合作）：<br>进程间的相互联系是有意识的安排的，直接作用只发生在相交进程间<br><strong>进程的同步</strong><br><img src="http://ww1.sinaimg.cn/large/005ZR24Xly1g0rxzy22p7j30hi0aijvb.jpg" alt></p>
+</li>
+<li><p>间接作用（资源共享）：<br>进程间要通过某种中介发生联系，是无意识安排的，可发生在相交进程之间，也可发生在无关进程之间<br><strong>进程的互斥</strong><br>由于各进程要求共享资源，而有些资源需要互斥使用，因此各进程间竞争使用这些资源，进程的这种关系为进程的互斥。</p>
+</li>
+<li>同步是一种更为复杂的互斥，而互斥是一种特殊的同步</li>
+</ul>
+<h3 id="生产者-消费者问题"><a href="#生产者-消费者问题" class="headerlink" title="生产者-消费者问题"></a>生产者-消费者问题</h3><ul>
+<li>P、V 信号量<blockquote>
+<p>P 和 V 是来源于两个荷兰语词汇，P() —prolaag （荷兰语，尝试减少的意思），V() —verhoog（荷兰语，增加的意思）</p>
+</blockquote>
+</li>
+<li>信号量（Semaphore）是一个整型变量，可以对其执行 down 和 up 操作，也就是常见的 P 和 V 操作。<br>down : 如果信号量大于 0 ，执行 -1 操作；如果信号量等于 0，进程睡眠，等待信号量大于 0；（阻塞）<br>up ：对信号量执行 +1 操作，唤醒睡眠的进程让其完成 down 操作。（唤醒）</li>
+<li>如果信号量的取值只能为 0 或者 1，那么就成为了 互斥量（Mutex） ，0 表示临界区已经加锁，1 表示临界区解锁。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">#define N 100</span><br><span class="line">typedef int semaphore;</span><br><span class="line">semaphore mutex = 1;</span><br><span class="line">semaphore empty = N;</span><br><span class="line">semaphore full = 0;</span><br><span class="line"></span><br><span class="line">void producer() &#123;</span><br><span class="line">    while(TRUE)&#123;</span><br><span class="line">        int item = produce_item(); // 生产一个产品</span><br><span class="line">        // down(&amp;empty) 和 down(&amp;mutex) 不能交换位置，否则造成死锁</span><br><span class="line">        down(&amp;empty); // 记录空缓冲区的数量，这里减少一个产品空间</span><br><span class="line">        down(&amp;mutex); // 互斥锁</span><br><span class="line">        insert_item(item);</span><br><span class="line">        up(&amp;mutex); // 互斥锁</span><br><span class="line">        up(&amp;full); // 记录满缓冲区的数量，这里增加一个产品</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void consumer() &#123;</span><br><span class="line">    while(TRUE)&#123;</span><br><span class="line">        down(&amp;full); // 记录满缓冲区的数量，减少一个产品</span><br><span class="line">        down(&amp;mutex); // 互斥锁</span><br><span class="line">        int item = remove_item();</span><br><span class="line">        up(&amp;mutex); // 互斥锁</span><br><span class="line">        up(&amp;empty); // 记录空缓冲区的数量，这里增加一个产品空间</span><br><span class="line">        consume_item(item);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>注意，不能先对缓冲区进行加锁，再测试信号量</strong>。也就是说，不能先执行 down(mutex) 再执行 down(empty)。如果这么做了，那么可能会出现这种情况：生产者对缓冲区加锁后，执行 down(empty) 操作，发现 empty = 0，此时生产者睡眠。消费者不能进入临界区，因为生产者对缓冲区加锁了，也就无法执行 up(empty) 操作，empty 永远都为 0，那么生产者和消费者就会一直等待下去，造成死锁。</p>
+<h3 id="哲学家进餐问题"><a href="#哲学家进餐问题" class="headerlink" title="哲学家进餐问题"></a>哲学家进餐问题</h3><p>如果所有哲学家同时拿起左手边的筷子，那么就无法拿起右手边的筷子，造成死锁。<br>有多种办法可以解决这个问题<br>1、只有哲学家两只手的筷子都可以用时，才允许他吃饭<br>2、奇数号先取左手边的叉子，偶数号先取右手边的筷子；</p>
+<h3 id="管程机制"><a href="#管程机制" class="headerlink" title="管程机制"></a>管程机制</h3><ul>
+<li>P.V 操作的优缺点：<br>简单，而且表达能力强（用 P.V 操作可解决任何同步和互斥问题），但 P, V 操作代码均由用户编写，计算机系统无法有效地控制和管理这些 P，V 操作。分散在各进程中的临界段没有集中加以管理不够安全；P.V 操作使用不当会出现死锁；且这种错误只有在特定顺序下才出现；遇到复杂同步和互斥问题时实现复杂。<br>总之，信号量(P,V)<strong>不是最安全的进程通讯手段</strong><br><strong>管程的基本原理</strong><br>把分散在各进程中的临界区集中起来管理，并把共享资源用数据结构抽象地表示出来,代表共享资源的数据结构及并发进程在其上执行的一组过程就构成管程。</li>
+<li>管程的属性<br>模块化：管程是一个基本程序单位<br>抽象数据类型：管程中不仅有数据，而且有对数据的操作<br>信息掩蔽:管程的数据结构只能供过程调用，过程内的过程<br>被管程外的进程调用，数据结构和过程对外不可见</li>
+<li><strong>通常系统为每个共享资源设置一个管程</strong></li>
+</ul>
+<hr>
+<h2 id="进程通信"><a href="#进程通信" class="headerlink" title="进程通信"></a>进程通信</h2><h3 id="通信机制"><a href="#通信机制" class="headerlink" title="通信机制"></a>通信机制</h3><p>每 个进程各自有不同的用户地址空间，任何一个进程的全局变量在另一个进程中都看不到，所以进程之间要交换数据必须通过<strong>内核</strong>，在内核中开辟一块缓冲区，进程 1 把数据<strong>从用户空间拷到内核缓冲区</strong>，进程 2 再<strong>从内核缓冲区把数据读走</strong>，内核提供的这种机制称为进程间通信（IPC，InterProcess ommunication）</p>
+<h3 id="高级通信机制分类"><a href="#高级通信机制分类" class="headerlink" title="高级通信机制分类"></a>高级通信机制分类</h3><ul>
+<li>共享存储器系统</li>
+<li>管道通信<br>管道(pipeline)是连接读写进程的一个特殊文件，允许进程按先进先出方式传送数据,也能使进程同步执行操作。<br>发送进程以字符流形式把大量数据送入管道，接收进程从管道中接收数据，所以叫管道通信。<br>管道的实质是一个共享文件，基本上可借助于文件系统的机制实现，包括（管道）文件的创建、打开、关闭和读写。</li>
+<li>消息传递通信系统</li>
+</ul>
+<hr>
+<h2 id="线程及其实现"><a href="#线程及其实现" class="headerlink" title="线程及其实现"></a>线程及其实现</h2><p>进程的“独立分配资源”和“被调度分派执行”的功能分离</p>
+<ul>
+<li>独立分配资源：由进程完成，作为系统资源分配和保护的独立单位，无须频繁的切换</li>
+<li>被调度分派执行：交给线程的实体来完成，线程作为系统系统调度和分派的基本单位，会被频繁地调度和切换。<br><img src="http://ww1.sinaimg.cn/large/005ZR24Xgy1g0ry0ic5vxj31320tmwmz.jpg" alt></li>
+</ul>
+  	
+					
+	  </div>     
+	  
+
+	<div class="post-footer">
+
+  <div class="post-footer-other">
+      <span class="post-footer-item">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img lazyload" src="/blog/images/placeholder.png" alt="No Donate Image!" data-src="/blog/images/wechat.png">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img lazyload" src="/blog/images/placeholder.png" alt="No Donate Image!" data-src="/blog/images/avatar.png">	
+	</div>
+
+	<span class="donate-word"></span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+      </span>           
+      <span class="post-footer-item">
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=2837ebe4fd6c8"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		<div class="-mob-inner">
+		   			             
+            <a class="iconfont icon-share-qq -mob-share-link"></a>		
+     	   			             
+            <a class="iconfont icon-share-weixin -mob-share-link"></a>		
+     	   
+		</div>
+	</div>	
+
+      </span>           
+  </div>  
+
+  <div class="post-footer-meta">
+        	
+
+        
+          <i class="iconfont icon-tag"></i>     
+            <a class="tag-link" href="/blog/tags/操作系统/">操作系统</a>    
+        	
+  </div>
+
+</div>
+
+
+<nav class="post-footer-nav">
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/46731/" id="post-nav-newer" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">newer</strong>
+           
+          <a class="post-nav-title" href="/blog/posts/46731/">
+          操作系统——处理机调度与死锁</a>
+      </a>
+    </div>
+  
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/8239/" id="post-nav-older" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">older</strong>
+        
+          <a class="post-nav-title" href="/blog/posts/8239/">
+          操作系统——引论</a>
+      </a>
+    </div>
+  
+</nav>
+ 
+	
+
+
+    <div id="comment">   
+    </div>
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+
+    <script src="//unpkg.com/valine@v1.1.8-beta/dist/Valine.min.js"></script>
+
+    <script>
+        new Valine({
+        av: AV,
+        el: '#comment',
+        notify:false, 
+        verify:false, 
+        app_id: '7kxu60nBeUEAJKLWktcgg0mz-9Nh9j0Va',
+        app_key: 'N40K3DuKj3WpLWwPJSbmuRyC',  
+        path:window.location.pathname, 
+        guest_info:['nick','mail'],
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!'
+        });
+    </script>
+	
+</article>
+
+	<div class="toc-container">
+			<div class="toc-sidebar">
+			<p class="toc-title">
+				CONTENT
+			</p>
+			<div class="toc-list">
+				<ol class="toc-inner"><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#进程的基本概念"><span class="toc-inner-text">进程的基本概念</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#程序的顺序执行及其特征"><span class="toc-inner-text">程序的顺序执行及其特征</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#前趋图（DAG）"><span class="toc-inner-text">前趋图（DAG）</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#程序的并发执行及其特征"><span class="toc-inner-text">程序的并发执行及其特征</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#进程的特征与状态"><span class="toc-inner-text">进程的特征与状态</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#进程控制块（PCB）"><span class="toc-inner-text">进程控制块（PCB）</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#进程同步"><span class="toc-inner-text">进程同步</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#基本概念"><span class="toc-inner-text">基本概念</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#进程间的两种制约关系"><span class="toc-inner-text">进程间的两种制约关系</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#生产者-消费者问题"><span class="toc-inner-text">生产者-消费者问题</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#哲学家进餐问题"><span class="toc-inner-text">哲学家进餐问题</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#管程机制"><span class="toc-inner-text">管程机制</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#进程通信"><span class="toc-inner-text">进程通信</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#通信机制"><span class="toc-inner-text">通信机制</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#高级通信机制分类"><span class="toc-inner-text">高级通信机制分类</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#线程及其实现"><span class="toc-inner-text">线程及其实现</span></a></li></ol>
+			</div>
+		</div>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">
+            <span class="search-cancel">
+                <i class="iconfont icon-cancel">
+            </i></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+    <div class="mobile-menu">
+  
+  <img class="mobile-menu-icon lazyload" src="/blog/images/placeholder.png" data-src="/blog/images/favicon.png">
+    
+
+  <a class="mobile-menu-link" href="/blog/">首页
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/archives">归档
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/tags">标签
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/about">关于
+  </a>
+    
+
+  <a class="mobile-menu-link mobile-menu-search" href="#">搜索
+  </a>
+   
+</div>
+        
+    
+
+
+
+     
+     
+
+<footer id="footer">
+  <div class="footer-copyright">
+    &copy;  2018-  2022 Keen King
+    <br>
+
+    Theme by
+    <a href="https://github.com/Lemonreds/hexo-theme-Nayo" target="_blank">Nayo</a>
+  </div>
+</footer>
+   
+
+  
+
+    <script src="/blog/nayo.bundle.js"></script>     
+    
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/blog/js/fireworks.js"></script>
+
+
+  </body>        
+</html>

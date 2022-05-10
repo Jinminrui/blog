@@ -1,0 +1,323 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  聊一聊JavaWeb项目后端和前端的交互 |   KeenKing的个人博客 </title>
+
+ 
+  
+    <link rel="icon" href="/blog/images/favicon.png">
+  
+
+
+  <link rel="stylesheet" href="/blog/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <head><meta name="generator" content="Hexo 3.9.0">
+  <meta name="referrer" content="no-referrer">
+</head>
+
+<header class="header">
+	
+  <nav class="header-nav">        
+
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-logo">
+      <a href="/blog">
+        <img class="header-logo-img" src="/blog/images/favicon.png">
+      </a>
+    </div>
+
+    <div class="header-menu">          
+              
+          
+            <a class="header-menu-link" id="header-menu-home" href="/blog/">
+              <i class="iconfont icon-home">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-archives" href="/blog/archives">
+              <i class="iconfont icon-archives">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-tags" href="/blog/tags">
+              <i class="iconfont icon-tags">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-about" href="/blog/about">
+              <i class="iconfont icon-about">  
+            </i></a>     
+          
+              
+          
+              <a class="header-menu-link" id="header-menu-search">
+                <i class="iconfont icon-search">  
+              </i></a>
+          
+                  
+    </div>  
+    
+  </nav>
+</header>
+
+   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+  <p class="post-title">
+    聊一聊JavaWeb项目后端和前端的交互
+  </p>
+
+  <div class="meta-info">
+    <span>
+      11月 27, 2018
+    </span>
+
+     
+    <i class="iconfont icon-words"></i>
+    <span>
+      1515
+    </span>
+    
+  </div>
+</div>
+ 
+	 
+
+	  <div class="typo post-content slideDownMin">
+
+		
+
+			
+					<p>最近在做学校老师的一个钢管租赁网站的项目，我负责前端的开发。再加上期中考试和各种各样的作业博客也是好久没有更新了（=·=好吧其实是我懒）言归正传，这也算是我第一次参加正式的开发项目，前前后后改了不少次，但确实是学到了很多东西，这和自己平时在网上看看博客写写demo完全是不一样的。<br><a id="more"></a><br>这个项目的后台是很早就已经开发得差不多了的。项目采取前后端代码分离的架构，即前端是完全的html格式文件，并非jsp模版文件，数据渲染一律采用ajax方式请求后端获取。今天就来聊一聊JavaWeb项目后端和前端的交互问题，一是增强记忆，二来最近身边的同学也在学习JavaWeb的开发（好像都很懵逼的样子，其实我也只了解一些皮毛）</p>
+<h2 id="后端Controller的编写"><a href="#后端Controller的编写" class="headerlink" title="后端Controller的编写"></a>后端Controller的编写</h2><p>现在jave web后端的主流框架为SSM（Spring   SpringMVC    Mybatis）或者是SpringBoot + Mybatis。它们都是以MVC为基础的框架，在前后端代码分离的项目中，编写Controller层简单粗暴的说就是设计接口以便前端调用。下面是一段SpringBoot中Controller层的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@Controller</span><br><span class="line">@RequestMapping(&quot;/api&quot;)</span><br><span class="line">public class DemoController &#123;</span><br><span class="line">	@RequestMapping(value=“/getinfo”,method=RequestMethod.GET)</span><br><span class="line">	@ResponseBody</span><br><span class="line">	private Map&lt;String,Object&gt; getInfo()&#123;</span><br><span class="line">		Map&lt;String,Object&gt; modelMap = new HashMap&lt;String,Object&gt;();</span><br><span class="line">		...</span><br><span class="line">		...</span><br><span class="line">		...</span><br><span class="line">		(调用service层的接口）</span><br><span class="line">		return modelMap;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这就是一个可以通过get方式请求的接口，运行项目，访问<a href="http://localhost:8080/projectname/api/getinfo" target="_blank" rel="noopener">http://localhost:8080/projectname/api/getinfo</a> 便可以获取json格式的数据。<br>如果是post方式的请求，那么将代码<code>@RequestMapping(value=“/getinfo”,method=RequestMethod.GET)</code>中的GET改为POST，并使getInfo方法接收一个参数<code>HttpServletRequest request</code> ，然后在方法内处理请求体获取需要的数据便可（具体处理在这里不详述）</p>
+<h2 id="前端ajax调用接口"><a href="#前端ajax调用接口" class="headerlink" title="前端ajax调用接口"></a>前端ajax调用接口</h2><p>这里便不仔细解释了，给出get与post两种方式的ajax请求模版（使用jquery）<br>具体的参数大家可以自行谷歌了解。<br>GET方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$.getJSON(initUrl, function(data) &#123;</span><br><span class="line">	...</span><br><span class="line">	...	</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>POST方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">	url : Url,</span><br><span class="line">	type : ‘POST’,</span><br><span class="line">	data : formData,</span><br><span class="line">	contentType : false,</span><br><span class="line">	processData : false,</span><br><span class="line">	cache : false,</span><br><span class="line">	success : function(data) &#123;</span><br><span class="line">		if (data.success) &#123;</span><br><span class="line">			$.toast(‘提交成功！’);</span><br><span class="line">		&#125; else &#123;</span><br><span class="line">			$.toast(‘提交失败！’ + data.errMsg);</span><br><span class="line">			console.log(data.errMsg);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+  	
+					
+	  </div>     
+	  
+
+	<div class="post-footer">
+
+  <div class="post-footer-other">
+      <span class="post-footer-item">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img" src="/blog/images/wechat.png" alt="No Donate Image!">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img" src="/blog/images/avatar.png" alt="No Donate Image!">	
+	</div>
+
+	<span class="donate-word"></span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+      </span>           
+      <span class="post-footer-item">
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=2837ebe4fd6c8"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		<div class="-mob-inner">
+		   			             
+            <a class="iconfont icon-share-qq -mob-share-link"></a>		
+     	   			             
+            <a class="iconfont icon-share-weixin -mob-share-link"></a>		
+     	   
+		</div>
+	</div>	
+
+      </span>           
+  </div>  
+
+  <div class="post-footer-meta">
+        	
+
+        
+          <i class="iconfont icon-tag"></i>     
+            <a class="tag-link" href="/blog/tags/Java-Web/">Java Web</a>    
+        	
+  </div>
+
+</div>
+
+
+<nav class="post-footer-nav">
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/52302/" id="post-nav-newer" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">newer</strong>
+           
+          <a class="post-nav-title" href="/blog/posts/52302/">
+          Unix/Linux系统基础</a>
+      </a>
+    </div>
+  
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/52053/" id="post-nav-older" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">older</strong>
+        
+          <a class="post-nav-title" href="/blog/posts/52053/">
+          当你在地址栏输入了一行网址……</a>
+      </a>
+    </div>
+  
+</nav>
+ 
+	
+
+
+    <div id="comment">   
+    </div>
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+
+    <script src="//unpkg.com/valine@v1.1.8-beta/dist/Valine.min.js"></script>
+
+    <script>
+        new Valine({
+        av: AV,
+        el: '#comment',
+        notify:false, 
+        verify:false, 
+        app_id: '7kxu60nBeUEAJKLWktcgg0mz-9Nh9j0Va',
+        app_key: 'N40K3DuKj3WpLWwPJSbmuRyC',  
+        path:window.location.pathname, 
+        guest_info:['nick','mail'],
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!'
+        });
+    </script>
+	
+</article>
+
+	<div class="toc-container">
+			<div class="toc-sidebar">
+			<p class="toc-title">
+				CONTENT
+			</p>
+			<div class="toc-list">
+				<ol class="toc-inner"><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#后端Controller的编写"><span class="toc-inner-text">后端Controller的编写</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#前端ajax调用接口"><span class="toc-inner-text">前端ajax调用接口</span></a></li></ol>
+			</div>
+		</div>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">
+            <span class="search-cancel">
+                <i class="iconfont icon-cancel">
+            </i></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+    <div class="mobile-menu">
+  
+  <img class="mobile-menu-icon" src="/blog/images/favicon.png">
+    
+
+  <a class="mobile-menu-link" href="/blog/">首页
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/archives">归档
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/tags">标签
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/about">关于
+  </a>
+    
+
+  <a class="mobile-menu-link mobile-menu-search" href="#">搜索
+  </a>
+   
+</div>
+        
+    
+
+
+
+     
+     
+
+<footer id="footer">
+  <div class="footer-copyright">
+    &copy;  2018-  2022 Keen King
+    <br>
+
+    Theme by
+    <a href="https://github.com/Lemonreds/hexo-theme-Nayo" target="_blank">Nayo</a>
+  </div>
+</footer>
+   
+
+  
+
+    <script src="/blog/nayo.bundle.js"></script>     
+    
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/blog/js/fireworks.js"></script>
+
+
+  </body>        
+</html>

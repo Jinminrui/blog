@@ -1,0 +1,325 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  浅析V8引擎垃圾回收机制 |   KeenKing的个人博客 </title>
+
+ 
+  
+    <link rel="icon" href="/blog/images/favicon.png">
+  
+
+
+  <link rel="stylesheet" href="/blog/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <head><meta name="generator" content="Hexo 3.9.0">
+  <meta name="referrer" content="no-referrer">
+</head>
+
+<header class="header">
+	
+  <nav class="header-nav">        
+
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-logo">
+      <a href="/blog">
+        <img class="header-logo-img" src="/blog/images/favicon.png">
+      </a>
+    </div>
+
+    <div class="header-menu">          
+              
+          
+            <a class="header-menu-link" id="header-menu-home" href="/blog/">
+              <i class="iconfont icon-home">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-archives" href="/blog/archives">
+              <i class="iconfont icon-archives">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-tags" href="/blog/tags">
+              <i class="iconfont icon-tags">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-about" href="/blog/about">
+              <i class="iconfont icon-about">  
+            </i></a>     
+          
+              
+          
+              <a class="header-menu-link" id="header-menu-search">
+                <i class="iconfont icon-search">  
+              </i></a>
+          
+                  
+    </div>  
+    
+  </nav>
+</header>
+
+   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+  <p class="post-title">
+    浅析V8引擎垃圾回收机制
+  </p>
+
+  <div class="meta-info">
+    <span>
+      4月 18, 2019
+    </span>
+
+     
+    <i class="iconfont icon-words"></i>
+    <span>
+      1200
+    </span>
+    
+  </div>
+</div>
+ 
+	 
+
+	  <div class="typo post-content slideDownMin">
+
+		
+
+			
+					<h2 id="为什么需要垃圾回收"><a href="#为什么需要垃圾回收" class="headerlink" title="为什么需要垃圾回收"></a>为什么需要垃圾回收</h2><p>JavaScript 和 Java 一样由垃圾回收机制进行自动内存管理，这使得我们开发者不需要像 C/C++ 程序员那样在编写代码的时候时刻关注内存的分配和释放问题。事实上，在浏览器中进行开发时，几乎很少有人能遇到垃圾回收对应用程序性能影响的情况。然而在 Node 环境下，对于性能敏感的服务端程序，内存管理和垃圾回收状况好坏都会对服务产生影响。</p>
+<a id="more"></a>
+<h2 id="Node-与-V8"><a href="#Node-与-V8" class="headerlink" title="Node 与 V8"></a>Node 与 V8</h2><p>我们都知道 Google 的 Chrome 浏览器以其性能优异成为焦点，Chrome 背后的成功离不开 JavaScript 引擎 V8。V8 的性能优势使得使用 JavaScript 编写高性能后台服务程序成为可能，在这样的契机下，Node 的创始人 Ryan Dahl 选择了 V8 ，在事件驱动，非阻塞 I/O 模型的设计下实现了 Node。</p>
+<h2 id="V8-的内存限制"><a href="#V8-的内存限制" class="headerlink" title="V8 的内存限制"></a>V8 的内存限制</h2><p>在一般的后端开发语言中，在基本的内存使用上没有什么限制，然而在 Node 中通过 JavaScript 使用内存就会发现只能使用部分内存，64 位操作系统下约为 1.4GB，32 位系统下约为 0.7GB。这种内存限制，在浏览器环境下使用起来绰绰有余，但是在服务端却限制了开发者随心所欲使用大内存的想法。</p>
+<h2 id="垃圾回收机制"><a href="#垃圾回收机制" class="headerlink" title="垃圾回收机制"></a>垃圾回收机制</h2><h3 id="内存分代"><a href="#内存分代" class="headerlink" title="内存分代"></a>内存分代</h3><p>在 V8 中，主要将内存分为新生代和老生代两种，新生代中的对象为存活时间较短的对象，老生代中的对象为存活时间较长或常驻内存的对象。</p>
+<h3 id="新生代算法"><a href="#新生代算法" class="headerlink" title="新生代算法"></a>新生代算法</h3><p>新生代中的对象一般存活时间较短，使用 Scavenge GC 算法。<br>在新生代空间中，内存空间分为两部分，分别为 From 空间和 To 空间。在这两个空间中，必定有一个空间是使用的，另一个空间是空闲的。新分配的对象会被放入 From 空间中，当 From 空间被占满时，新生代 GC 就会启动了。<strong>算法会检查 From 空间中存活的对象并复制到 To 空间中，如果有失活的对象就会销毁。当复制完成后将 From 空间和 To 空间互换</strong>，这样 GC 就结束了。<br>当一个对象经过多次复制依然存活时，它将会被认为是生命周期较长的对象，这种对象随后会被移动到老生代中，采用新的算法管理。这个过程称为<strong>晋升</strong>。<br>晋升的条件主要有两个，一个是对象是否经过 Scavenge 回收，一个是 To 空间的内存占比超过限制。</p>
+<h3 id="老生代算法"><a href="#老生代算法" class="headerlink" title="老生代算法"></a>老生代算法</h3><p>V8 在老生代中主要采用<strong>Mark-Sweep</strong>和<strong>Mark-Compact</strong>相结合方式进行垃圾回收<br>Mark-Sweep 是标记清除的意思，它分为标记和清除两个阶段。Mark-Sweep 在标记阶段遍历堆中的所有对象，并标记活着的对象，在随后的清除阶段中，只清除没有被标记的对象。<br>Mark-Sweep 最大的问题是在一次标记清除回收后，内存空间会出现不连续的情况，也就是内存碎片。当出现需要分配一个大对象的情况，所有的碎片空间都无法完成此次分配，就会提前触发垃圾回收，而这是不必要的。<br>Mark-Compact 是标记整理的意思，它在对象被标记死亡后，在整理的过程中，将活着的对象往一端移动，移动完成后，清理掉边界外的内存。</p>
+  	
+					
+	  </div>     
+	  
+
+	<div class="post-footer">
+
+  <div class="post-footer-other">
+      <span class="post-footer-item">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img" src="/blog/images/wechat.png" alt="No Donate Image!">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img" src="/blog/images/avatar.png" alt="No Donate Image!">	
+	</div>
+
+	<span class="donate-word"></span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+      </span>           
+      <span class="post-footer-item">
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=2837ebe4fd6c8"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		<div class="-mob-inner">
+		   			             
+            <a class="iconfont icon-share-qq -mob-share-link"></a>		
+     	   			             
+            <a class="iconfont icon-share-weixin -mob-share-link"></a>		
+     	   
+		</div>
+	</div>	
+
+      </span>           
+  </div>  
+
+  <div class="post-footer-meta">
+        	
+
+        
+          <i class="iconfont icon-tag"></i>     
+            <a class="tag-link" href="/blog/tags/JavaScript原理/">JavaScript原理</a>    
+        	
+  </div>
+
+</div>
+
+
+<nav class="post-footer-nav">
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/17609/" id="post-nav-newer" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">newer</strong>
+           
+          <a class="post-nav-title" href="/blog/posts/17609/">
+          面试常问的操作系统知识</a>
+      </a>
+    </div>
+  
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/25817/" id="post-nav-older" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">older</strong>
+        
+          <a class="post-nav-title" href="/blog/posts/25817/">
+          实现一个小小的输出特效</a>
+      </a>
+    </div>
+  
+</nav>
+ 
+	
+
+
+    <div id="comment">   
+    </div>
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+
+    <script src="//unpkg.com/valine@v1.1.8-beta/dist/Valine.min.js"></script>
+
+    <script>
+        new Valine({
+        av: AV,
+        el: '#comment',
+        notify:false, 
+        verify:false, 
+        app_id: '7kxu60nBeUEAJKLWktcgg0mz-9Nh9j0Va',
+        app_key: 'N40K3DuKj3WpLWwPJSbmuRyC',  
+        path:window.location.pathname, 
+        guest_info:['nick','mail'],
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!'
+        });
+    </script>
+	
+</article>
+
+	<div class="toc-container">
+			<div class="toc-sidebar">
+			<p class="toc-title">
+				CONTENT
+			</p>
+			<div class="toc-list">
+				<ol class="toc-inner"><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#为什么需要垃圾回收"><span class="toc-inner-text">为什么需要垃圾回收</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#Node-与-V8"><span class="toc-inner-text">Node 与 V8</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#V8-的内存限制"><span class="toc-inner-text">V8 的内存限制</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#垃圾回收机制"><span class="toc-inner-text">垃圾回收机制</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#内存分代"><span class="toc-inner-text">内存分代</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#新生代算法"><span class="toc-inner-text">新生代算法</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#老生代算法"><span class="toc-inner-text">老生代算法</span></a></li></ol></li></ol>
+			</div>
+		</div>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">
+            <span class="search-cancel">
+                <i class="iconfont icon-cancel">
+            </i></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+    <div class="mobile-menu">
+  
+  <img class="mobile-menu-icon" src="/blog/images/favicon.png">
+    
+
+  <a class="mobile-menu-link" href="/blog/">首页
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/archives">归档
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/tags">标签
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/about">关于
+  </a>
+    
+
+  <a class="mobile-menu-link mobile-menu-search" href="#">搜索
+  </a>
+   
+</div>
+        
+    
+
+
+
+     
+     
+
+<footer id="footer">
+  <div class="footer-copyright">
+    &copy;  2018-  2022 Keen King
+    <br>
+
+    Theme by
+    <a href="https://github.com/Lemonreds/hexo-theme-Nayo" target="_blank">Nayo</a>
+  </div>
+</footer>
+   
+
+  
+
+    <script src="/blog/nayo.bundle.js"></script>     
+    
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/blog/js/fireworks.js"></script>
+
+
+  </body>        
+</html>

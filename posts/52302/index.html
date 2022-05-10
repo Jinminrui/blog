@@ -1,0 +1,507 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  Unix/Linux系统基础 |   KeenKing的个人博客 </title>
+
+ 
+  
+    <link rel="icon" href="/blog/images/favicon.png">
+  
+
+
+  <link rel="stylesheet" href="/blog/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <head><meta name="generator" content="Hexo 3.9.0">
+  <meta name="referrer" content="no-referrer">
+</head>
+
+<header class="header">
+	
+  <nav class="header-nav">        
+
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-logo">
+      <a href="/blog">
+        <img class="header-logo-img" src="/blog/images/favicon.png">
+      </a>
+    </div>
+
+    <div class="header-menu">          
+              
+          
+            <a class="header-menu-link" id="header-menu-home" href="/blog/">
+              <i class="iconfont icon-home">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-archives" href="/blog/archives">
+              <i class="iconfont icon-archives">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-tags" href="/blog/tags">
+              <i class="iconfont icon-tags">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-about" href="/blog/about">
+              <i class="iconfont icon-about">  
+            </i></a>     
+          
+              
+          
+              <a class="header-menu-link" id="header-menu-search">
+                <i class="iconfont icon-search">  
+              </i></a>
+          
+                  
+    </div>  
+    
+  </nav>
+</header>
+
+   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+  <p class="post-title">
+    Unix/Linux系统基础
+  </p>
+
+  <div class="meta-info">
+    <span>
+      12月 25, 2018
+    </span>
+
+     
+    <i class="iconfont icon-words"></i>
+    <span>
+      6607
+    </span>
+    
+  </div>
+</div>
+ 
+	 
+
+	  <div class="typo post-content slideDownMin">
+
+		
+
+			
+					<h2 id="一、Unix-操作系统基础"><a href="#一、Unix-操作系统基础" class="headerlink" title="一、Unix 操作系统基础"></a>一、Unix 操作系统基础</h2><h3 id="1、shell"><a href="#1、shell" class="headerlink" title="1、shell"></a>1、shell</h3><p>shell 是内核与用户之间的接口，是一个交互的命令解释器</p>
+<h3 id="2、unix-目录组织"><a href="#2、unix-目录组织" class="headerlink" title="2、unix 目录组织"></a>2、unix 目录组织</h3><ul>
+<li>在 unix 中，一切都是文件，文件组织成目录，目录是一种组织和控制文件访问的很好的方式，用户可以为目录设置权限以允许其他人访问的文件或只允许自己访问</li>
+<li>文件类型：<br>1、普通文件<br>2、目录文件<br>3、字符设备文件<br>4、块设备文件</li>
+</ul>
+<a id="more"></a>
+<h2 id="二、Unix-基本命令"><a href="#二、Unix-基本命令" class="headerlink" title="二、Unix 基本命令"></a>二、Unix 基本命令</h2><p>\$提示符是 bourne shell、korn shell、posix shell 的标准提示符<br>%提示符通常是 c shell 的提示符<br>“#”提示符一般是为系统管理员保留的<br>用分号分割一行中两个命令</p>
+<h3 id="1、几种命令"><a href="#1、几种命令" class="headerlink" title="1、几种命令"></a>1、几种命令</h3><ul>
+<li><strong>man</strong>命令用来查看帮助手册<code>man 4 passwd</code>用来查看 passwd 的手册的第四节的内容</li>
+<li><strong>who</strong>命令报告有哪些用户已经登陆系统，每一个用户连接的终端和登陆时间的信息。<code>who am i</code>报告本用户的用户名和端口信息。<code>whoami</code>命令报告系统与本地终端关联的用户吗</li>
+<li><strong>write</strong>命令向当前登陆到同一个系统的用户的终端发送信息并显示，实现了通过终端的交互对话。</li>
+<li><strong>echo</strong>命令用于向屏幕上打印信息<br>~双引号~ ：可引用除了字符\$、`、\外的任意字符或字符串<br>~单引号~ ：shell 会忽略任何引用值，即屏蔽单引号内的特殊字符的原本含义。<br>~反引号~ ：shell 认为反引号中的内容是一个系统命令</li>
+<li><strong>date</strong>命令可以用来显示或设定系统的日期与时间，在显示方面，使用者可以设定欲显示的格式，格式设定为一个加号后接数个标记</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">date +%Y%m%d</span><br><span class="line">20184012/23/18</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>passwd</strong>命令为你的账户设置密码</li>
+<li><strong>uname</strong>查看当前系统的版本号</li>
+</ul>
+<h3 id="2、命令语法"><a href="#2、命令语法" class="headerlink" title="2、命令语法"></a>2、命令语法</h3><ul>
+<li>通配符<br>“?”表示任意单个字符<br>“*”表示任何字符<br>“[]”表示括号中的任意一个字符</li>
+<li>重定向字符<br>标准输入： &lt;<br>标准输出： &gt; &gt;&gt;在原来文件内容的基础上附加<br>标准错误输出：2&gt;</li>
+<li>命令行选项<br>用一个破折线定义命令的不同形式</li>
+<li>管道符<br>“|” 完成两程序的连接，例如<code>ps -ef | more</code><br>常用于过滤、修改或维护命令的输出</li>
+<li>后台处理<br>将任务放在后台处理，例如 “&amp;”</li>
+</ul>
+<h3 id="3、文件系统目录"><a href="#3、文件系统目录" class="headerlink" title="3、文件系统目录"></a>3、文件系统目录</h3><p>文件通常是数据的容器，而目录是文件或者其他目录的容器。</p>
+<ul>
+<li>/opt 这个目录会用来存放应用程序和产品</li>
+<li>/usr/bin 包含的基础的 unix 系统操作和文件处理的命令</li>
+<li>/usr/lib 包含应用程序使用的文档和共享的库</li>
+<li>/usr/local/bin 存放本地开发的程序的工具（/usr/contrib/bin 存放公用的）</li>
+<li>/etc 系统配置文件</li>
+<li>/stand/vmunix 存放系统内核文件</li>
+<li>/tmp 通常作为操作系统的一个临时空间</li>
+<li>/dev 存放可以被连接到系统硬件设备的文件，通常被叫做“设备文件”</li>
+</ul>
+<h3 id="4、文件权限"><a href="#4、文件权限" class="headerlink" title="4、文件权限"></a>4、文件权限</h3><p><code>drwxr-xr-x</code>第一位 l 软连接 d 目录 b 块文件 c 字符 -都不是 ；后 9 位每三位分别是 user、group、other 的权限：read、write、execute</p>
+<h3 id="5、文件系统命令"><a href="#5、文件系统命令" class="headerlink" title="5、文件系统命令"></a>5、文件系统命令</h3><ul>
+<li>pwd 查看当前目录</li>
+<li>ls 查看目录下文件名（ll 会显示详细信息）<br>-a 显示所有文件<br>-d 列出文件描述<br>-l 每一个文件描述属性的长列表<br>-F 在每个目录后面加反斜杠/，在可执行文件后面加星号*<br>-R 递归地列出给出的目录和所有子目录中的文件</li>
+<li>cd 进入目录</li>
+<li>find 找到文件</li>
+<li>mkdir 创建目录</li>
+<li>rmdir 删除目录</li>
+<li>more 一次一屏的显示</li>
+<li>cp 复制文件 <code>cp file1 fiel2</code><br>-i 会在复制时向你确认是否覆盖旧文件<br>-r 选项可复制目录<br>-p 复制时保留权限</li>
+<li>mv 移动或者给文件重命名</li>
+<li>touch 创建新文件<br>touch 命令有以下选项：<br>-a time 更改存取(Access)时间为指定的时间<br>-m time 更改修改(Modify)时间为指定的时间<br>-t time 使用指定时间(time)来代替当前时间。<br>-c 如果文件不存在，不创建新文件。</li>
+<li>find 路径 -name 文件名</li>
+<li>cat 命令主要有三大功能： 1.一次显示整个文件。<br><code>$ cat filename</code> 2.从键盘创建一个文件。<br><code>$ cat &gt; filename</code><br>只能创建新文件,不能编辑已有文件. 3.将几个文件合并为一个文件。<br><code>$cat file1 file2 &gt; file</code></li>
+<li>file 命令 查看文件类型</li>
+<li>grep 搜索文件内容</li>
+<li>统计文本 wc<br>统计行数、字数、字符数<br><code>wc -[l,w,c] filename</code></li>
+<li>whereis 查找命令<br>-b 仅搜索二进制文件<br>-m 仅搜索帮助文件<br>-s 仅搜索源代码</li>
+</ul>
+<h3 id="6、用户和用户组管理"><a href="#6、用户和用户组管理" class="headerlink" title="6、用户和用户组管理"></a><strong>6、用户和用户组管理</strong></h3><p>有关用户账号的文件：</p>
+<ul>
+<li>passwd 文件：每一个合法用户的账号对应该文件中的一行记录<br>（登陆名：密码：用户标志号：组标志号：用户的全名或其他描述：主目录：登陆 shell）</li>
+<li>shadow 文件： /etc/shadow 文件存放用户账户的加密密码信息和密码的有效期。</li>
+<li>group 文件：/etc/group 存放系统中的所有组<br>（组名：密码：组标志号：用户列表）</li>
+<li>使用 useradd 和 groupadd 命令来添加用户和组；<br>修改组属性：groupmod [-g &lt;新 GID&gt; [-o]][-n &lt;新组名&gt;] &lt;现有组名&gt;</li>
+</ul>
+<h2 id="三、管理文件"><a href="#三、管理文件" class="headerlink" title="三、管理文件"></a>三、管理文件</h2><h3 id="1、lp-命令"><a href="#1、lp-命令" class="headerlink" title="1、lp 命令"></a>1、lp 命令</h3><ul>
+<li>lp 命令让用户将文件送往打印队列来打印文件。每个使用 lp 提交的打印请求都会被分配一个唯一的任务标识号（称为一个请求 ID）。<br>lp 命令的语法是：<br>lp [-d dest][-n number] [-o option] –t title [-w][file….]<br>一些 lp 命令的选项：<br>-n number 文件打印的重复的份数（默认是 1）。<br>-d dest 打印请求会被送到的打印机的名字。<br>-t title 在打印输出的标题页中打印标题。<br>-o option 指定你的打印机的具体的选项，例如字体，间距，灰度等等<br>-w 在文件打印完成以后，写一条信息到用户的终端。<br>lpstat 报告已经送往打印机队列的打印请求</li>
+</ul>
+<h3 id="2、cancel-命令"><a href="#2、cancel-命令" class="headerlink" title="2、cancel 命令"></a>2、cancel 命令</h3><p>cancel id [id …] 取消一个有 lp 命令产生的打印机任务<br>cannel printer [ printer…] 取消当前在指定打印机上的打印任务</p>
+<h3 id="3、ln-命令"><a href="#3、ln-命令" class="headerlink" title="3、ln 命令"></a>3、ln 命令</h3><p><code>ln file1 file2</code></p>
+<ul>
+<li>硬链接文件和原文件指向同样的数据，就像克隆一样，inode 号也相同，当删除原文件时，硬链接文件仍然存在有效。但硬链接文件不同于文件的复制，并没有复制原文件数据。简单说，硬链接就是一个类似于别名的概念。当原来的名字没有了，别名照样可以使用。<br>硬链接指通过索引节点来进行的连接<br>硬链接不可以跨文件系统，不能为目录建硬链接<br>看不出硬链接和文件的区别，属性上都用-表示</li>
+<li>软链接和 windows 系统的快捷方式含义一样。软链接和原文件的 inode 不同，该文件的内容是指向原文件的路径信息。软链接就好像是指针一样。而硬链接就是引用。<br>软链接可以跨文件系统<br>属性上用 l 表示</li>
+</ul>
+<h3 id="4、文件的权限管理"><a href="#4、文件的权限管理" class="headerlink" title="4、文件的权限管理"></a>4、文件的权限管理</h3><ul>
+<li>chmod 改变文件的存取权限</li>
+<li>chown 改变一个文件的属主，只有文件的属主和 root 才能更改一个文件的所有权</li>
+<li>umask 改变默认的文件存取权限</li>
+<li>chgrp 改变一个文件的组</li>
+<li>su 转换你的用户的身份</li>
+<li>newgrp 转换你的组的身份</li>
+</ul>
+<h2 id="四、定制工作环境"><a href="#四、定制工作环境" class="headerlink" title="四、定制工作环境"></a>四、定制工作环境</h2><ul>
+<li>alias 为命令设置别名<code>alias dir=&#39;ls&#39;</code></li>
+<li>tab 文件名自动补全</li>
+<li>history 历史命令，在默认方式下，bash 使用用户主目录下面的文件“.bash_history”来保存历史命令<br>改变存放历史命令的文件<br><code># HISTFILE=“/home/mengqc/.myhistory”</code><br>重新设定能够保留的命令个数<br><code># HISTSIZE=600</code></li>
+</ul>
+<h3 id="1、环境变量"><a href="#1、环境变量" class="headerlink" title="1、环境变量"></a>1、环境变量</h3><ul>
+<li>使用<strong>env</strong>命令来查看用户环境变量<br>注意，多数环境变量，都需要<strong>export</strong>才起作用<br>例如 <code># export $PATH</code></li>
+<li>与环境变量相关的<strong>全局配置</strong>文件<br>/etc/bashrc 全局配置<br>/etc/profile 登录 shell 的全局配置</li>
+<li><strong>个人配置</strong>文件，每个登录用户的 home 目录下有：<br>~/.bshrc<br>~/.bash_profile<br>~/.cshrc</li>
+</ul>
+<h2 id="五、vi-编辑器"><a href="#五、vi-编辑器" class="headerlink" title="五、vi 编辑器"></a>五、vi 编辑器</h2><h3 id="1、开始指令"><a href="#1、开始指令" class="headerlink" title="1、开始指令"></a>1、开始指令</h3><ul>
+<li>vi +n filename 进入 vi 并且由文件的第几行开始。</li>
+<li>vi +filename 进入 vi 并且由文件的最后一行开始。</li>
+<li>vi + /word filename 进入 vi 并且由文件的 word 这个字开始。</li>
+<li>vi filename(s) 进入 vi 并且将各指定文件列入名单内，第一个文件先读入。（多文件）</li>
+<li>vedit 进入 vi 并且在输入方式时会在状态行显示“INSERT MODE”。</li>
+</ul>
+<h3 id="2、加数据指令"><a href="#2、加数据指令" class="headerlink" title="2、加数据指令"></a>2、加数据指令</h3><ul>
+<li>i 在关标位置开始插入字符，结束时候按 ESC 键。</li>
+<li>I 在光标所在行首开始加字，结束时按 ESC 键。</li>
+<li>a 在光标位置后开始加字，结束时按 ESC 键。</li>
+<li>A 在光标所在行尾部开始加字，结束时按 ESC 键。</li>
+<li>o 在光标所在行下插入一空白行并开始加字。</li>
+<li>O 在光标所在行上插入一空白行并开始加字。</li>
+</ul>
+<h3 id="3、删除指令"><a href="#3、删除指令" class="headerlink" title="3、删除指令"></a>3、删除指令</h3><ul>
+<li>x 删除光标处字符。</li>
+<li>dw 删除从光标位置开始到单词结束处的字符。</li>
+<li>dd 删除当前一整行。</li>
+<li>d0 删除从行首到光标位置的字符。</li>
+<li>d\$ 或 D 删除从光标位置到行尾的字符。</li>
+<li>nx 删除由光标位置起始的 n 个字符（含光标位置）</li>
+<li>nX 删除由光标位置起始的 n 个字符（不含光标位置）。</li>
+<li>ndw 删除光标位置开始的 n 个字符组（word)。</li>
+<li>ndd 将光标位置起始的 n 行（整行）删除。</li>
+<li>:start,endd 删除文件的第 start 到 end 行。</li>
+</ul>
+<h3 id="4、光标移动"><a href="#4、光标移动" class="headerlink" title="4、光标移动"></a>4、光标移动</h3><p>h 往左移 1 位<br>l 或者 spacebar 往右移 1 位<br>k 向上移 1 行<br>j 向下移 1 行<br>0 移到一行的开始<br>\$ 移到一行的末尾<br>[ 移到文件开始位置<br>] 移到文件结束位置<br>G 移到文件的最后一行<br>nG 或者:n 移到文件的第 n 行<br>Ctrl + u 屏幕上卷半屏<br>Ctrl + d 屏幕下卷半屏<br>Ctrl + b 屏幕上卷一屏<br>Ctrl + f 屏幕下卷一屏</p>
+<h3 id="5、查找与替换"><a href="#5、查找与替换" class="headerlink" title="5、查找与替换"></a>5、查找与替换</h3><p>r 修改光标所指的字符<br>R 从光标位置开始修改，结束时按 ESC 键<br>/text 从光标位置往下找字串 text<br>?text 从光标位置往上找字串 text<br>n 继续找下一个字串（在输入上面的查找指令之后使用）<br>[range]s/old_string/new_string[ /option ] 将指定范围内的字符处替换为新串</p>
+<h3 id="6、复制及移动文本"><a href="#6、复制及移动文本" class="headerlink" title="6、复制及移动文本"></a>6、复制及移动文本</h3><p>nY 复制光标所在位置开始的 n 行数据<br>p 将数据粘贴在光标的下一行<br>P 将数据粘贴在光标的上一行<br>:first,last co dest 将 first 到 last 行的数据复制到目标行(dest）下面<br>:Start,end 　 m dest 将 start 到 end 行的数据移动到目标行（dest)下。　　　<br>:r filename 将指定文件的内容读入光标所在行下。</p>
+<h2 id="六、shell-编程基础"><a href="#六、shell-编程基础" class="headerlink" title="六、shell 编程基础"></a>六、shell 编程基础</h2><h3 id="1、示例"><a href="#1、示例" class="headerlink" title="1、示例"></a>1、示例</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#！ /bin/bash</span><br><span class="line"># create a group of files</span><br><span class="line">for((i=1;i&lt;=10;i++))</span><br><span class="line">do</span><br><span class="line">		touch tt$i</span><br><span class="line">		echo this is tt$i &gt;&gt; tt$i</span><br><span class="line">done</span><br><span class="line">ls -l tt*</span><br></pre></td></tr></table></figure>
+<h3 id="2、执行-shell-脚本的基本方法"><a href="#2、执行-shell-脚本的基本方法" class="headerlink" title="2、执行 shell 脚本的基本方法"></a>2、执行 shell 脚本的基本方法</h3><ul>
+<li><code>source test.sh</code></li>
+<li><code>sh test.sh</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">* chmod 755 test.sh</span><br><span class="line"> ./test.sh</span><br></pre></td></tr></table></figure>
+<h3 id="3、变量"><a href="#3、变量" class="headerlink" title="3、变量"></a>3、变量</h3><ul>
+<li>定义变量<br>变量名=字符串 <strong>【注意，等号左右无空格】</strong></li>
+<li>如果变量值须出现在长字符串的开头或者中间，为了使变量名与其后的字符区分开，避免 shell 把它与其它字符混在一起视为一个新变量，则应该用花括号将该变量名括起来。</li>
+<li>命令替换除了反引号的另一种形势： <code>$(pwd)</code></li>
+<li>声明一个数组：<code>declare -a 数组名</code><br>定义数组： <code>a=(1 2 3 4 .... n)</code>其中，各个值之间以空格分开。<br>读取数组元素值：<code>echo ${数组名[下标]}</code></li>
+<li>若没有给出数组元素的下标，则数组名表示下标为 0 的数组元素</li>
+<li>逻辑操作符 &amp;&amp; ||<br>cmd1 &amp;&amp; cmd2 仅当命令 cmd1 执行成功时，才会执行命令 cmd2。<br>cmd1 || cmd2 仅当命令 cmd1 执行失败时，才会执行命令 cmd2。</li>
+<li>位置参数 0,1,2,……<br>命令行实参与脚本中位置变量的对应关系如下所示：<br>exam1 m1 m2 m3 m4<br>$0      $1 $2   $3 $4   $5 $6   $7 $8    $9 ${10}  ${11}<br>引用它们的方式依次是$0, $1, $2, …, $9, ${10}, ${11}等。<br>其中，\$0 始终表示命令名或 shell 脚本名。<br>使用 set 命令为位置参数赋值</li>
+<li>特殊变量<br>$#    表示命令行上实际参数的个数(不包括shell程序名本身)<br>$<em> 表示命令行实际给出的所有实参字符串<br>\$@ 表示命令行实际给出的所有实参字符串
+</em>注意:<em><br>\$</em>和$@基本功能相同，但是当两侧有双引号时则存在差别!<br>即:<br>① “$*”把实际给出的所有实参当作一个整体，即一个字符串。<br>② “\$@”把实际给出的每个实参当作一个字符串，即多个字符串。</li>
+</ul>
+<h3 id="4、算术运算"><a href="#4、算术运算" class="headerlink" title="4、算术运算"></a>4、算术运算</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">a=4;b=3</span><br><span class="line">((c=a+b))</span><br><span class="line">echo $c</span><br><span class="line">--------------</span><br><span class="line">a=4;b=3</span><br><span class="line">let &quot;c=b-a&quot;</span><br><span class="line">echo $c</span><br><span class="line">--------------</span><br><span class="line">expr 4 + 3</span><br><span class="line">7</span><br><span class="line">a=`expr 4 + 3`</span><br><span class="line">echo $a</span><br><span class="line">7</span><br></pre></td></tr></table></figure>
+<p>在算术表达式中，变量名可以直接使用，不需要加\$<br>使用 expr 命令进行算术运算，运算符两侧必须有空格<br>-f 是否是文件<br>-d 是否是目录</p>
+<h3 id="5、函数"><a href="#5、函数" class="headerlink" title="5、函数"></a>5、函数</h3><ul>
+<li>示例</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ave()</span><br><span class="line">&#123;</span><br><span class="line">		sum=0;</span><br><span class="line">		for((i=0;i&lt;=n;i++))</span><br><span class="line">		do</span><br><span class="line">				((sum=sum+a[i]))</span><br><span class="line">		done</span><br><span class="line">		((sum=sum/n))</span><br><span class="line">		echo $sun</span><br><span class="line">&#125;</span><br><span class="line">n=5</span><br><span class="line">a=(90 82 84 72 61)</span><br><span class="line">ave</span><br></pre></td></tr></table></figure>
+<h2 id="七、系统管理"><a href="#七、系统管理" class="headerlink" title="七、系统管理"></a>七、系统管理</h2><h3 id="1、前、后台执行"><a href="#1、前、后台执行" class="headerlink" title="1、前、后台执行"></a>1、前、后台执行</h3><ul>
+<li>命令行末尾，加 &amp; 字符，作业放到后台执行</li>
+<li>组合键【ctrl -z】：把正在前台执行的作业挂起，并置于后台</li>
+<li>fg 命令：<code>fg &lt;作业号&gt;</code>把后台作业调到前台执行</li>
+<li>bg 命令：<code>bg &lt;作业号&gt;</code>让后台挂起的作业继续在后台执行</li>
+<li>jobs 命令： 了解当前作业情况</li>
+<li>nohup 命令 用户退出后作业继续执行</li>
+</ul>
+<h3 id="2、查看进程"><a href="#2、查看进程" class="headerlink" title="2、查看进程"></a>2、查看进程</h3><p>ps 命令查看进程，常用格式：</p>
+<ul>
+<li>ps -ef</li>
+<li>ps aux</li>
+<li>ps -ef | grep<br><strong>grep</strong>: <strong>-n</strong>, <strong>-v</strong>, <strong>-i</strong>and <strong>-c</strong>.<br><strong>-c</strong>显示每个文件中匹配的行数<br><strong>-i</strong>不分大小写<br><strong>-n</strong>显示匹配行的行号<br><strong>-v</strong>显示不匹配的行（匹配的行不显示）<br>例如 <code>ps –ef|grep -i python|grep –v grep</code></li>
+</ul>
+<h3 id="3、有过滤作用的命令"><a href="#3、有过滤作用的命令" class="headerlink" title="3、有过滤作用的命令"></a>3、有过滤作用的命令</h3><ul>
+<li>head –n 20 /etc/passwd</li>
+<li>tail –n 20 /etc/passwd</li>
+<li>tail –f /log/xxx.log 查看正在改变的日志</li>
+<li>more</li>
+<li>less</li>
+<li>wc 统计行、字、字符等</li>
+<li>既显示结果，又存入文件，用 tee 实现</li>
+<li>ls /home | tee dir.list<br>-</li>
+</ul>
+<p><img src="http://ww1.sinaimg.cn/large/005ZR24Xgy1g0rxwnaobyj30rc0kmtb3.jpg" alt></p>
+<h3 id="4、备份与压缩"><a href="#4、备份与压缩" class="headerlink" title="4、备份与压缩"></a>4、备份与压缩</h3><ul>
+<li><strong>tar</strong><br>-c: 建立压缩档案<br>-x：解压<br>-t：查看内容<br>-r：向压缩归档文件末尾追加文件<br>-u：更新原压缩包中的文件</li>
+</ul>
+<p>这五个是独立的命令，压缩解压都要用到其中一个，可以和别的命令连用但只能用其中一个。下面的参数是根据需要在压缩或解压档案时可选的。</p>
+<p>-z：有 gzip 属性的<br>-j：有 bz2 属性的<br>-Z：有 compress 属性的<br>-v：显示所有过程<br>-O：将文件解开到标准输出</p>
+<p>下面的参数-f 是必须的</p>
+<p>-f: 使用档案名字，切记，这个参数是最后一个参数，后面只能接档案名。</p>
+<ul>
+<li>gzip</li>
+<li>gunzip</li>
+<li>unzip</li>
+</ul>
+<h3 id="5、网络命令"><a href="#5、网络命令" class="headerlink" title="5、网络命令"></a>5、网络命令</h3><ul>
+<li>ping 命令<br><code>ping[选项] 目的地</code></li>
+<li>ifconfig 用来配置一个网络接口</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">* 示例：</span><br><span class="line">## 显示所有当前活动的网络接口的情况。</span><br><span class="line">ifconfig</span><br><span class="line">## 显示指定网络接口eth0的情况。</span><br><span class="line">ifconfig  eth0</span><br><span class="line">## 配置一个以太网接口，以给定IP地址定义这个网络接口的地址。同时，ifconfig命令自动地创建一个标准的广播地址和子网掩码。</span><br><span class="line">ifconfig  eth0  211.68.38.133</span><br><span class="line">## 指定以太网卡eth0的IP地址为211.68.38.133，广播地址为211.68.38.255,子网掩码为255.255.255.0。</span><br><span class="line">ifconfig   eth0   211.68.38.133   broadcast   211.68.38.255   netmask   255.255.255.0</span><br></pre></td></tr></table></figure>
+<ul>
+<li>netstat 命令 统计 TCP/IP 网络协议的连接。<br>netstat 显示当前已经创建的连接<br>netstat -nr 将显示路由表</li>
+<li>route 命令<br>route 命令为数据传递所需的网络连接配置路由信息。</li>
+</ul>
+  	
+					
+	  </div>     
+	  
+
+	<div class="post-footer">
+
+  <div class="post-footer-other">
+      <span class="post-footer-item">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img" src="/blog/images/wechat.png" alt="No Donate Image!">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img" src="/blog/images/avatar.png" alt="No Donate Image!">	
+	</div>
+
+	<span class="donate-word"></span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+      </span>           
+      <span class="post-footer-item">
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=2837ebe4fd6c8"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		<div class="-mob-inner">
+		   			             
+            <a class="iconfont icon-share-qq -mob-share-link"></a>		
+     	   			             
+            <a class="iconfont icon-share-weixin -mob-share-link"></a>		
+     	   
+		</div>
+	</div>	
+
+      </span>           
+  </div>  
+
+  <div class="post-footer-meta">
+        	
+
+        
+          <i class="iconfont icon-tag"></i>     
+            <a class="tag-link" href="/blog/tags/Unix/">Unix</a>    
+        	
+  </div>
+
+</div>
+
+
+<nav class="post-footer-nav">
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/49260/" id="post-nav-newer" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">newer</strong>
+           
+          <a class="post-nav-title" href="/blog/posts/49260/">
+          计算机组成原理——概述</a>
+      </a>
+    </div>
+  
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/52136/" id="post-nav-older" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">older</strong>
+        
+          <a class="post-nav-title" href="/blog/posts/52136/">
+          聊一聊JavaWeb项目后端和前端的交互</a>
+      </a>
+    </div>
+  
+</nav>
+ 
+	
+
+
+    <div id="comment">   
+    </div>
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+
+    <script src="//unpkg.com/valine@v1.1.8-beta/dist/Valine.min.js"></script>
+
+    <script>
+        new Valine({
+        av: AV,
+        el: '#comment',
+        notify:false, 
+        verify:false, 
+        app_id: '7kxu60nBeUEAJKLWktcgg0mz-9Nh9j0Va',
+        app_key: 'N40K3DuKj3WpLWwPJSbmuRyC',  
+        path:window.location.pathname, 
+        guest_info:['nick','mail'],
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!'
+        });
+    </script>
+	
+</article>
+
+	<div class="toc-container">
+			<div class="toc-sidebar">
+			<p class="toc-title">
+				CONTENT
+			</p>
+			<div class="toc-list">
+				<ol class="toc-inner"><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#一、Unix-操作系统基础"><span class="toc-inner-text">一、Unix 操作系统基础</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#1、shell"><span class="toc-inner-text">1、shell</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#2、unix-目录组织"><span class="toc-inner-text">2、unix 目录组织</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#二、Unix-基本命令"><span class="toc-inner-text">二、Unix 基本命令</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#1、几种命令"><span class="toc-inner-text">1、几种命令</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#2、命令语法"><span class="toc-inner-text">2、命令语法</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#3、文件系统目录"><span class="toc-inner-text">3、文件系统目录</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#4、文件权限"><span class="toc-inner-text">4、文件权限</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#5、文件系统命令"><span class="toc-inner-text">5、文件系统命令</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#6、用户和用户组管理"><span class="toc-inner-text">6、用户和用户组管理</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#三、管理文件"><span class="toc-inner-text">三、管理文件</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#1、lp-命令"><span class="toc-inner-text">1、lp 命令</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#2、cancel-命令"><span class="toc-inner-text">2、cancel 命令</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#3、ln-命令"><span class="toc-inner-text">3、ln 命令</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#4、文件的权限管理"><span class="toc-inner-text">4、文件的权限管理</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#四、定制工作环境"><span class="toc-inner-text">四、定制工作环境</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#1、环境变量"><span class="toc-inner-text">1、环境变量</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#五、vi-编辑器"><span class="toc-inner-text">五、vi 编辑器</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#1、开始指令"><span class="toc-inner-text">1、开始指令</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#2、加数据指令"><span class="toc-inner-text">2、加数据指令</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#3、删除指令"><span class="toc-inner-text">3、删除指令</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#4、光标移动"><span class="toc-inner-text">4、光标移动</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#5、查找与替换"><span class="toc-inner-text">5、查找与替换</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#6、复制及移动文本"><span class="toc-inner-text">6、复制及移动文本</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#六、shell-编程基础"><span class="toc-inner-text">六、shell 编程基础</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#1、示例"><span class="toc-inner-text">1、示例</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#2、执行-shell-脚本的基本方法"><span class="toc-inner-text">2、执行 shell 脚本的基本方法</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#3、变量"><span class="toc-inner-text">3、变量</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#4、算术运算"><span class="toc-inner-text">4、算术运算</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#5、函数"><span class="toc-inner-text">5、函数</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#七、系统管理"><span class="toc-inner-text">七、系统管理</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#1、前、后台执行"><span class="toc-inner-text">1、前、后台执行</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#2、查看进程"><span class="toc-inner-text">2、查看进程</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#3、有过滤作用的命令"><span class="toc-inner-text">3、有过滤作用的命令</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#4、备份与压缩"><span class="toc-inner-text">4、备份与压缩</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#5、网络命令"><span class="toc-inner-text">5、网络命令</span></a></li></ol></li></ol>
+			</div>
+		</div>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">
+            <span class="search-cancel">
+                <i class="iconfont icon-cancel">
+            </i></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+    <div class="mobile-menu">
+  
+  <img class="mobile-menu-icon" src="/blog/images/favicon.png">
+    
+
+  <a class="mobile-menu-link" href="/blog/">首页
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/archives">归档
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/tags">标签
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/about">关于
+  </a>
+    
+
+  <a class="mobile-menu-link mobile-menu-search" href="#">搜索
+  </a>
+   
+</div>
+        
+    
+
+
+
+     
+     
+
+<footer id="footer">
+  <div class="footer-copyright">
+    &copy;  2018-  2022 Keen King
+    <br>
+
+    Theme by
+    <a href="https://github.com/Lemonreds/hexo-theme-Nayo" target="_blank">Nayo</a>
+  </div>
+</footer>
+   
+
+  
+
+    <script src="/blog/nayo.bundle.js"></script>     
+    
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/blog/js/fireworks.js"></script>
+
+
+  </body>        
+</html>

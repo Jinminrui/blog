@@ -1,0 +1,380 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  操作系统——存储器管理 |   KeenKing的个人博客 </title>
+
+ 
+  
+    <link rel="icon" href="/blog/images/favicon.png">
+  
+
+
+  <link rel="stylesheet" href="/blog/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <head><meta name="generator" content="Hexo 3.9.0">
+  <meta name="referrer" content="no-referrer">
+</head>
+
+<header class="header">
+	
+  <nav class="header-nav">        
+
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-logo">
+      <a href="/blog">
+        <img class="header-logo-img" src="/blog/images/favicon.png">
+      </a>
+    </div>
+
+    <div class="header-menu">          
+              
+          
+            <a class="header-menu-link" id="header-menu-home" href="/blog/">
+              <i class="iconfont icon-home">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-archives" href="/blog/archives">
+              <i class="iconfont icon-archives">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-tags" href="/blog/tags">
+              <i class="iconfont icon-tags">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-about" href="/blog/about">
+              <i class="iconfont icon-about">  
+            </i></a>     
+          
+              
+          
+              <a class="header-menu-link" id="header-menu-search">
+                <i class="iconfont icon-search">  
+              </i></a>
+          
+                  
+    </div>  
+    
+  </nav>
+</header>
+
+   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+  <p class="post-title">
+    操作系统——存储器管理
+  </p>
+
+  <div class="meta-info">
+    <span>
+      1月 09, 2019
+    </span>
+
+     
+    <i class="iconfont icon-words"></i>
+    <span>
+      2548
+    </span>
+    
+  </div>
+</div>
+ 
+	 
+
+	  <div class="typo post-content slideDownMin">
+
+		
+
+			
+					<h2 id="存储器的层次结构"><a href="#存储器的层次结构" class="headerlink" title="存储器的层次结构"></a>存储器的层次结构</h2><p>多级存储器结构<br><img src="http://ww1.sinaimg.cn/large/005ZR24Xgy1g0ry139br9j30h608h75n.jpg" alt></p>
+<a id="more"></a>
+<p><img src="http://ww1.sinaimg.cn/large/005ZR24Xgy1g0ry18hw7oj30hf084jru.jpg" alt></p>
+<h2 id="程序的装入和链接"><a href="#程序的装入和链接" class="headerlink" title="程序的装入和链接"></a>程序的装入和链接</h2><p>在多道程序环境下，程序要运行必须为之创建进程，而创建进程的第一件事，就是要将程序和数据装入内存。如何将一个用户源程序变为一个可在内存中执行的程序，通常要经过以下几步 :<br>（1）编译：由编译程序（Compiler）将用户源代码编译成<br>若干个目标模 块（Object Module）；<br>（2）链接：由链接程序（Linker）将编译后形成的目标模<br>块以及它们所需要的库函数，链接在一起，形<br> 成一个装入模块（Load Module）；<br>（3）装入：由装入程序（Loader）将装入模块装入内存。</p>
+<h3 id="程序的链接"><a href="#程序的链接" class="headerlink" title="程序的链接"></a>程序的链接</h3><ul>
+<li>静态链接：在装入之前目标模块+库函数链接好,以后不在拆开</li>
+<li>动态链接<br><strong>装入时动态链接</strong>：将用户源程序编译后所得到的一组目标模块，在装入内存时，采用边装入边链接的方式。即在装入一个目标模块时，若发生一个外部模块调用事件，将引起装入程序去找出相应的外部目标模块。<br>便于修改和更新<br>便于实现对目标模块的共享<br><strong>运行时动态链接</strong>：运行过程中，需要则链接<br>拥有装入时动态链接的优点<br>加快程序的装入过程，节省内存空间</li>
+</ul>
+<h3 id="程序的装入"><a href="#程序的装入" class="headerlink" title="程序的装入"></a>程序的装入</h3><ul>
+<li>方式：绝对装入 、可重定位装入 、动态运行时装入</li>
+<li>需要注意的问题：<br>（1）装入是从外存——&gt;内存；链接是从目标块——&gt;内存的进程<br>（2）程序作业中相对地址或逻辑地址——&gt;进程执行需要内存绝对地址或物理地址。因而在装入时，存在着地址转换，称为重定位。</li>
+<li>绝对装入：只能将目标模块装入指定的内存位置</li>
+<li>可重定位的装入： 装入时将逻辑地址转换为物理地址(重定位)，逻辑地址从 0 开始</li>
+<li>动态运行时装入：模块装入内存后没有立即重定位，仍然是相对地址；只<br>有当 cpu 执行到具有相对地址的代码时才去重定位——&gt;动态重定位</li>
+</ul>
+<h2 id="内存的分配"><a href="#内存的分配" class="headerlink" title="内存的分配"></a>内存的分配</h2><h3 id="单一连续分配："><a href="#单一连续分配：" class="headerlink" title="单一连续分配："></a>单一连续分配：</h3><ul>
+<li>最简单的一种单用户、单任务的分配方式</li>
+<li>内存分成系统区和用户区两部分</li>
+</ul>
+<h3 id="固定分区分配"><a href="#固定分区分配" class="headerlink" title="固定分区分配"></a>固定分区分配</h3><p>在单一连续分配的基础上，将用户区划分成若干个固定大小的区，每个区可以放一个作业进程，多个进程并发。系统一启动后就已经分好了分区</p>
+<ul>
+<li>分区大小划分方法：<br>（1）分区大小相等：缺乏灵活性；内存空间浪费<br>（2）分区大小不等：</li>
+</ul>
+<h3 id="动态分区"><a href="#动态分区" class="headerlink" title="动态分区"></a>动态分区</h3><ul>
+<li>根据作业或进程的需要，动态的分配内存，一开始不分区</li>
+<li>数据结构：空闲分区表或者空闲分区链<br>空闲分区表：以表结构形式记录每个空闲分区的情况。<br>空闲分区链：以链表形式记录每个空闲分区的情况。</li>
+<li><strong>首次适应算法</strong><br>从空闲分区表或分区链（按照地址递增次序排列）上开始查找，找到第一个满足要求的分区为止，分配内存，余下的部分然仍留在空闲分区表中。</li>
+<li><strong>循环首次适应算法</strong><br>在为进程分配内存空间时，不再是每次都从链首开始查找，而是<strong>从上次找到的空闲分区的下一个分区</strong>开始查找，直至找到一个能满足要求的空闲分区，从中找出一块与请求大小相等的内存空间分配给作业。为实现该算法，应设置一起始查寻指针，用于指示下一个起始查寻的空闲分区，并采用循环查找方法，即如果最后一个（链尾）空闲分区的大小仍不能满足，则应<strong>返回到第一个空闲分区</strong>，比较其大小是否满足。找到后，应调整起始查寻指针。</li>
+<li><strong>最佳适应算法</strong><br>将分配表按照分区容量按照从小到大排列，查找时只需要从表首按顺序查找最合适的。每次为作业分 配内存时，总是找一个<strong>既能满足要求、又是最小</strong>的空闲分区分配给作业。“最佳或最合适的”。</li>
+<li><strong>最坏适应算法</strong><br>所有的空闲分区按从大到小形成空闲分区链，每次分配总是挑选出分配（链）中<strong>最大的分区</strong>进行分配。优点：使剩下的空闲区不至于太小，产生的碎片几率小；有利于中小作业；</li>
+<li><strong>快速适应算法</strong><br>将空闲分区根据其容量大小进行分类，对每一类具有相同容量的所有空闲分区，单独设立一个空闲分区链表，因此，系统中存在多个空闲分区链表，同时在内存中设立一张管理索引表，该表的每一表项对应了一种空闲分区类型，并记录了该类型空闲分区链表表头的指针。</li>
+<li><strong>可重定位分区分配</strong><br><img src="http://ww1.sinaimg.cn/large/005ZR24Xgy1g0ry1h1yixj311e0no46d.jpg" alt></li>
+</ul>
+<h3 id="主存不存的存储管理技术"><a href="#主存不存的存储管理技术" class="headerlink" title="主存不存的存储管理技术"></a>主存不存的存储管理技术</h3><ul>
+<li>移动技术（主存紧凑）</li>
+<li>对换技术</li>
+</ul>
+<h2 id="基本分页存储管理"><a href="#基本分页存储管理" class="headerlink" title="基本分页存储管理"></a>基本分页存储管理</h2><h3 id="分页的思想"><a href="#分页的思想" class="headerlink" title="分页的思想"></a>分页的思想</h3><ul>
+<li>把逻辑地址空间（程序）分成若干个大小相等的片－－页面或页、加以编号 0 页、1 页、2 页…….</li>
+<li>把内存也分成和页面大小相等的若干个物理存储块－－物理块加以编号 0 块、1 块、2 块……</li>
+<li>为进程分配内存时，将进程的~若干~个页装入多个~不相邻~的块中</li>
+<li>由于进程的最后一页经常装不满一页，因而形成不可以利用的碎片，称为“页内碎片”</li>
+</ul>
+<h3 id="页面的大小"><a href="#页面的大小" class="headerlink" title="页面的大小"></a>页面的大小</h3><ul>
+<li>页面若太小:<br>（1）虽然可使内存碎片减小，提高内存利用率<br>（2）会使每个进程占用较多的页面，从而导致进程的页表过<br>长，占用大量的内存<br>（3）还会降低页面换进和换出的效率。</li>
+<li>若页面太大:<br>（1）减少页表的长度，提高页面换进换出的速度<br>（2）增加页内碎片</li>
+<li>因此页面的大小应选择合适，大小应是 2 的幂，通常为 512B-8KB。<br><img src="http://ww1.sinaimg.cn/large/005ZR24Xly1g0ry1rco34j311m0q648w.jpg" alt></li>
+<li>基本分页存储管理的缺点：<br>页表是放在内存中的，因此 Cpu 存取一个数据，需要访问内存 2 次。第一次，访问内存中的页表，找出逻辑地址对应的物理地址；第二次访问内存物理地址处的数据.因此，降低了上计算机的处理速度。</li>
+<li>为了解决这一问题，引入<strong>快表</strong><br>快表是个具有并行查询能力的特殊高速缓冲寄存器（联想寄存器）<br>快表内只存放当前访问的页表项<br>很快、远远大于内存的速度、提高了地址变换的速度</li>
+</ul>
+<h2 id="基本分段存储管理"><a href="#基本分段存储管理" class="headerlink" title="基本分段存储管理"></a>基本分段存储管理</h2><h3 id="分段的目的"><a href="#分段的目的" class="headerlink" title="分段的目的"></a>分段的目的</h3><ul>
+<li>推动存储管理从 固定分区－&gt;可变分区-&gt;分页存储管理的主要动力是 ：提高内存的利用率</li>
+<li>引入分段管理的目的：满足程序员编写程序的要求：方便编程、信息共享、信息保护、动态增长、动态链接</li>
+</ul>
+<h3 id="分页与分段的主要区别"><a href="#分页与分段的主要区别" class="headerlink" title="分页与分段的主要区别"></a>分页与分段的主要区别</h3><ul>
+<li>段是信息的<strong>逻辑单位</strong>，它是根据用户的需要划分的，因此段对用户是可见的；页是信息的<strong>物理单位</strong>，是为了管理主存的方便而划分的，对用户是透明的。</li>
+<li>页的大小<strong>固定不变</strong>，由系统决定。段的大小是<strong>不固定</strong>的，它由其完成的功能决定。</li>
+<li>段是向用户提供的是<strong>二维</strong>地址空间，页式向用户提供的是<strong>一维</strong>地址空间，其页号和页内偏移是机器硬件的功能。</li>
+<li>由于段是信息的逻辑单位，因此便于存贮保护和信息的共享，页的保护和共享受到限制。</li>
+</ul>
+<h2 id="段页式存储管理"><a href="#段页式存储管理" class="headerlink" title="段页式存储管理"></a>段页式存储管理</h2><h3 id="引入段页式存储管理的原因"><a href="#引入段页式存储管理的原因" class="headerlink" title="引入段页式存储管理的原因"></a>引入段页式存储管理的原因</h3><p>页式管理可以提高内存利用率、段式管理可以满足用户需要，二者结合可以充分利用页式和段式的优点</p>
+<h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>先将用户程序分成若干个段、再把每个段中分成若干个页面，同时内存也分成与页面相同大小的块<br><img src="/blog/images/placeholder.png" alt data-src="http://ww1.sinaimg.cn/large/005ZR24Xly1g0ry2180zej313y0tyna8.jpg" class="lazyload"></p>
+  	
+					
+	  </div>     
+	  
+
+	<div class="post-footer">
+
+  <div class="post-footer-other">
+      <span class="post-footer-item">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img lazyload" src="/blog/images/placeholder.png" alt="No Donate Image!" data-src="/blog/images/wechat.png">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img lazyload" src="/blog/images/placeholder.png" alt="No Donate Image!" data-src="/blog/images/avatar.png">	
+	</div>
+
+	<span class="donate-word"></span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+      </span>           
+      <span class="post-footer-item">
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=2837ebe4fd6c8"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		<div class="-mob-inner">
+		   			             
+            <a class="iconfont icon-share-qq -mob-share-link"></a>		
+     	   			             
+            <a class="iconfont icon-share-weixin -mob-share-link"></a>		
+     	   
+		</div>
+	</div>	
+
+      </span>           
+  </div>  
+
+  <div class="post-footer-meta">
+        	
+
+        
+          <i class="iconfont icon-tag"></i>     
+            <a class="tag-link" href="/blog/tags/操作系统/">操作系统</a>    
+        	
+  </div>
+
+</div>
+
+
+<nav class="post-footer-nav">
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/35189/" id="post-nav-newer" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">newer</strong>
+           
+          <a class="post-nav-title" href="/blog/posts/35189/">
+          操作系统——虚拟存储器</a>
+      </a>
+    </div>
+  
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/46731/" id="post-nav-older" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">older</strong>
+        
+          <a class="post-nav-title" href="/blog/posts/46731/">
+          操作系统——处理机调度与死锁</a>
+      </a>
+    </div>
+  
+</nav>
+ 
+	
+
+
+    <div id="comment">   
+    </div>
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+
+    <script src="//unpkg.com/valine@v1.1.8-beta/dist/Valine.min.js"></script>
+
+    <script>
+        new Valine({
+        av: AV,
+        el: '#comment',
+        notify:false, 
+        verify:false, 
+        app_id: '7kxu60nBeUEAJKLWktcgg0mz-9Nh9j0Va',
+        app_key: 'N40K3DuKj3WpLWwPJSbmuRyC',  
+        path:window.location.pathname, 
+        guest_info:['nick','mail'],
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!'
+        });
+    </script>
+	
+</article>
+
+	<div class="toc-container">
+			<div class="toc-sidebar">
+			<p class="toc-title">
+				CONTENT
+			</p>
+			<div class="toc-list">
+				<ol class="toc-inner"><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#存储器的层次结构"><span class="toc-inner-text">存储器的层次结构</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#程序的装入和链接"><span class="toc-inner-text">程序的装入和链接</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#程序的链接"><span class="toc-inner-text">程序的链接</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#程序的装入"><span class="toc-inner-text">程序的装入</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#内存的分配"><span class="toc-inner-text">内存的分配</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#单一连续分配："><span class="toc-inner-text">单一连续分配：</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#固定分区分配"><span class="toc-inner-text">固定分区分配</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#动态分区"><span class="toc-inner-text">动态分区</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#主存不存的存储管理技术"><span class="toc-inner-text">主存不存的存储管理技术</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#基本分页存储管理"><span class="toc-inner-text">基本分页存储管理</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#分页的思想"><span class="toc-inner-text">分页的思想</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#页面的大小"><span class="toc-inner-text">页面的大小</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#基本分段存储管理"><span class="toc-inner-text">基本分段存储管理</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#分段的目的"><span class="toc-inner-text">分段的目的</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#分页与分段的主要区别"><span class="toc-inner-text">分页与分段的主要区别</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#段页式存储管理"><span class="toc-inner-text">段页式存储管理</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#引入段页式存储管理的原因"><span class="toc-inner-text">引入段页式存储管理的原因</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#基本思想"><span class="toc-inner-text">基本思想</span></a></li></ol></li></ol>
+			</div>
+		</div>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">
+            <span class="search-cancel">
+                <i class="iconfont icon-cancel">
+            </i></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+    <div class="mobile-menu">
+  
+  <img class="mobile-menu-icon lazyload" src="/blog/images/placeholder.png" data-src="/blog/images/favicon.png">
+    
+
+  <a class="mobile-menu-link" href="/blog/">首页
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/archives">归档
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/tags">标签
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/about">关于
+  </a>
+    
+
+  <a class="mobile-menu-link mobile-menu-search" href="#">搜索
+  </a>
+   
+</div>
+        
+    
+
+
+
+     
+     
+
+<footer id="footer">
+  <div class="footer-copyright">
+    &copy;  2018-  2022 Keen King
+    <br>
+
+    Theme by
+    <a href="https://github.com/Lemonreds/hexo-theme-Nayo" target="_blank">Nayo</a>
+  </div>
+</footer>
+   
+
+  
+
+    <script src="/blog/nayo.bundle.js"></script>     
+    
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/blog/js/fireworks.js"></script>
+
+
+  </body>        
+</html>

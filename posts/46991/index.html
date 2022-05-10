@@ -1,0 +1,423 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  计算机组成原理——存储器及存储系统 |   KeenKing的个人博客 </title>
+
+ 
+  
+    <link rel="icon" href="/blog/images/favicon.png">
+  
+
+
+  <link rel="stylesheet" href="/blog/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <head><meta name="generator" content="Hexo 3.9.0">
+  <meta name="referrer" content="no-referrer">
+</head>
+
+<header class="header">
+	
+  <nav class="header-nav">        
+
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-logo">
+      <a href="/blog">
+        <img class="header-logo-img" src="/blog/images/favicon.png">
+      </a>
+    </div>
+
+    <div class="header-menu">          
+              
+          
+            <a class="header-menu-link" id="header-menu-home" href="/blog/">
+              <i class="iconfont icon-home">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-archives" href="/blog/archives">
+              <i class="iconfont icon-archives">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-tags" href="/blog/tags">
+              <i class="iconfont icon-tags">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-about" href="/blog/about">
+              <i class="iconfont icon-about">  
+            </i></a>     
+          
+              
+          
+              <a class="header-menu-link" id="header-menu-search">
+                <i class="iconfont icon-search">  
+              </i></a>
+          
+                  
+    </div>  
+    
+  </nav>
+</header>
+
+   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+  <p class="post-title">
+    计算机组成原理——存储器及存储系统
+  </p>
+
+  <div class="meta-info">
+    <span>
+      1月 04, 2019
+    </span>
+
+     
+    <i class="iconfont icon-words"></i>
+    <span>
+      4203
+    </span>
+    
+  </div>
+</div>
+ 
+	 
+
+	  <div class="typo post-content slideDownMin">
+
+		
+
+			
+					<h2 id="存储器的分类"><a href="#存储器的分类" class="headerlink" title="存储器的分类"></a>存储器的分类</h2><ol>
+<li>按存储介质分<br>半导体存储器：如 ram、rom，用作主存<br>磁表面存储器：如磁盘、磁带，用作辅存<br>激光存储器：光盘，用作辅存</li>
+<li>按存储方式分<br><strong>随机存储器（RAM）</strong>：任何存储单元的内容都能被随机存取，且存取时间和存储单元的物理位置无关<br><strong>串行访问存储器（SAS）</strong>：存储单元的内容只能按某种顺序来存取，存取时间与存储单元的物理位置有关，取决于访问存储单元的地址顺序<br><strong>只读存储器（ROM）</strong>：对内容只能读不能写入的存储器。<a id="more"></a></li>
+<li>按信息的可保存性分<br>非永久性记忆的存储器：断电后信息即消失的存储器（RAM）<br>永久性记忆的存储器：永久记忆性存储器（ROM）</li>
+<li>按在计算机系统中的作用分<br>主存储器、辅助存储器、高速缓存存储器、控制存储器</li>
+</ol>
+<p><em>存储器的性能指标 ： 速度 价格 容量</em></p>
+<h2 id="存储器的分级结构"><a href="#存储器的分级结构" class="headerlink" title="存储器的分级结构"></a>存储器的分级结构</h2><p><img src="http://ww1.sinaimg.cn/large/005ZR24Xgy1g0rxxas4i3j3062053weo.jpg" alt><br>如图所示辅存、主存和缓存的三级存储系统结构，一般来说，“Cache－主存”层次用来弥补主存速度的不足；“主存－辅存”层次用来弥补主存容量的不足。</p>
+<hr>
+<h2 id="主存储器"><a href="#主存储器" class="headerlink" title="主存储器"></a>主存储器</h2><h3 id="主存储器的性能指标"><a href="#主存储器的性能指标" class="headerlink" title="主存储器的性能指标"></a>主存储器的性能指标</h3><ul>
+<li>存储容量：在一个存储器中可以容纳的出存储器的单元总数通常称为该存储器的存储容量（单位：字节 B）</li>
+<li>存取时间：存储器接受到命令到存储器读（写）出信息的时间</li>
+<li>存取周期：连续访问操作过程一次完整存取操作的时间。</li>
+<li>存储器带宽：单位时间内存储器所存取的信息量（位/秒，字节/秒）</li>
+</ul>
+<h3 id="半导体存储器芯片"><a href="#半导体存储器芯片" class="headerlink" title="半导体存储器芯片"></a>半导体存储器芯片</h3><p><strong>SRAM</strong>：静态随机存取存储器，是随机存取存储器的一种。所谓的“静态”，是指这种存储器只要保持通电，里面储存的数据就可以恒常保持。<br><strong>DRAM</strong>：动态随机存取存储器，是一种半导体内存，主要的作用原理是利用电容内存储电荷的多寡来代表一个二进制比特（bit）是 1 还是 0（电容上电荷的有无）。由于在现实中电容会有漏电的现象，导致电位差不足而使记忆消失，因此除非电容经常周期性地充电，否则无法确保记忆长存。由于这种需要定时刷新的特性，因此被称为“动态”内存。相对来说，静态内存（SRAM）只要存入数据后，纵使不刷新也不会丢失记忆。<br><em>SRAM 的存取速度快，但集成度低，功耗较大，一般用来组成高速缓冲存储器。</em><br><em>DRAM 具有容易集成，位价低，容量大和功耗低等优点。但是存取速度比 SRAM 慢，一般用来组成大容量的主存系统。</em></p>
+<p><img src="http://ww1.sinaimg.cn/large/005ZR24Xgy1g0rxxnggizj313q0sk0zw.jpg" alt><br><strong>动态 MOS 存储器 DRAM 的刷新</strong></p>
+<ul>
+<li>采用读出的方式进行刷新，按行来刷新，（行：单个芯片的单个矩阵的行数）</li>
+<li>刷新有三种方式：集中式、分散式、异步式<br><strong>半导体只读存储器</strong></li>
+<li>MROM(掩模型)：掩模工艺制作, 只能读出, 不能写，可靠性高, 集成度高, 不能重写</li>
+<li>PROM: 可一次编程之盾存储器</li>
+<li>EPROM: 可擦去可变成只读存储器(用紫外光擦去并且可以重复编程)</li>
+<li>EEPROM: 电擦去可重写只读存储器</li>
+<li>Flash Memoey(闪存存储器)<br>新型的电擦去可编程 ROM, 在 EPROM 功能基础上增加了芯片的点擦除和重新编程能力强<br>特点: 高密度, 可直接执行, 具有 RAM 的读写功能</li>
+</ul>
+<h3 id="存储器与-CPU-的连接"><a href="#存储器与-CPU-的连接" class="headerlink" title="存储器与 CPU 的连接"></a>存储器与 CPU 的连接</h3><p>（见书本和笔记）</p>
+<ul>
+<li>位扩展</li>
+<li>字扩展</li>
+</ul>
+<hr>
+<h2 id="高速缓冲存储器"><a href="#高速缓冲存储器" class="headerlink" title="高速缓冲存储器"></a>高速缓冲存储器</h2><h3 id="Cache-的功能与基本原理"><a href="#Cache-的功能与基本原理" class="headerlink" title="Cache 的功能与基本原理"></a>Cache 的功能与基本原理</h3><ul>
+<li>Cache 是指位于 CPU 和主存之间的一个高速小容量的存储器，一般由 SRAM 构成。</li>
+<li>Cache 功能：用于弥补 CPU 和主存之间的速度差异，提高 CPU 访问主存的平均速度。</li>
+<li>设置 Cache 的理论基础，是程序访问的局部性原理。</li>
+<li>Cache 的内容是主存部分内容的副本，Cache 的功能均由硬件实现，对程序员是透明的。<br><strong>基本原理</strong></li>
+<li>CPU 与 Cache 之间的数据交换是以字为单位，而 Cache 与主存之间的数据交换是以块为单位。一个块由若干定长字组成的。</li>
+<li>当 CPU 读取主存中一个字时，便发出此字的内存地址到 Cache 和主存。</li>
+<li>此时 Cache 控制逻辑依据地址判断此字当前是否在 Cache 中：若在(称为 ~命中~ ），此字立即传送给 CPU；若不在(称为 ~不命中~ ），则用主存读周期把此字从主存读出送到 CPU，与此同时，把含有这个字的整个数据块从主存读出送到 Cache 中。由始终管理 Cache 使用情况的硬件逻辑电路来实现 LRU 替换算法。</li>
+</ul>
+<h3 id="主存与-Cache-的地址映射"><a href="#主存与-Cache-的地址映射" class="headerlink" title="主存与 Cache 的地址映射"></a>主存与 Cache 的地址映射</h3><p>三种方式：直接方式、全相联、组相联</p>
+<ul>
+<li><strong>直接映射方式</strong><br>若主存的第 j 块一定映射到 Cache 的第 i 行，Cache 的行号 i 和主存的块号 j 有如下函数关系：i = j mod m（m 是 Cache 中的总行数。<br>优点是硬件简单，成本低。<br>缺点是每个主存块只有一个固定的行位置可存放，容易产生冲突。因此适合大容量 Cache 采用。</li>
+<li><strong>全相联映射方式</strong><br>主存中一个块的地址与块的内容一起存于 Cache 的行中，其中块地址存于 Cache 行的标记部分中。<br>这种方法可使主存的一个块直接拷贝到 Cache 中的任意一行上，非常灵活。<br>它的主要缺点是比较器电路难于设计和实现,因此只适合于小容量 Cache 采用。</li>
+<li><strong>组相联映射方式</strong><br>这是前两种方式的折衷方案。它把 Cache 存储器分为若干个组，每组包含若干个页面。组间采用直接映像，而组内的页面则采用全相联映像。<br>组相联映射方式中的每组行数 v 一般取值较小，这种规模的 v 路比较器容易设计和实现。而块在组中的排放又有一定的灵活性，冲突减少。</li>
+</ul>
+<hr>
+<h2 id="多体交叉存储器"><a href="#多体交叉存储器" class="headerlink" title="多体交叉存储器"></a>多体交叉存储器</h2><ul>
+<li>出发点：能够实现同时从存储器取出 n 条指令</li>
+<li>特点：通过改进主存的组织方式，在不改变存储器存取周期的情况下，提高存储器的带宽。</li>
+<li>结构特点：多体交叉存储器由 M 个的存储体（或称存储模块）组成，每个存储体有相同的容量和存取速度，又有各自独立的地址寄存器、地址译码器、读写电路和驱动电路。</li>
+<li>每个模块各自以等同的方式与 CPU 传送信息。CPU 同时访问四个模块，由存储器控制部件控制它们分时使用数据总线进行信息传递。这是一种并行存储器结构。</li>
+</ul>
+<hr>
+<h2 id="虚拟存储器"><a href="#虚拟存储器" class="headerlink" title="虚拟存储器"></a>虚拟存储器</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>虚拟存储器是建立在主存——辅存物理结构基础之上，由附加硬件装置以及操作系统存储管理软件组成的一种存储体系，它把主存和辅存的地址空间统一编址，形成一个庞大的存储空间。</p>
+<h3 id="实地址和虚地址"><a href="#实地址和虚地址" class="headerlink" title="实地址和虚地址"></a>实地址和虚地址</h3><ul>
+<li>实地址：实际的主存储器单元的地址，即主存地址，或叫物理地址。</li>
+<li>虚地址：虚拟存储器的辅存部分也能让用户象内存一样使用，用户编程时指令地址允许涉及到辅存的空间范围，这种指令地址称为“虚地址”（即虚拟地址），或叫“逻辑地址”。</li>
+<li>虚拟存储器的用户程序以虚地址编址并存放在辅存里，程序运行时 CPU 以虚地址访问主存，由辅助硬件找出虚地址和物理地址的对应关系</li>
+<li>主存——外存层次和 Cache——主存层次用的地址变换映射方法和替换策略是相同的，都基于程序局部性原理。</li>
+</ul>
+<h3 id="虚拟存储器和-Cache-的区别"><a href="#虚拟存储器和-Cache-的区别" class="headerlink" title="虚拟存储器和 Cache 的区别"></a>虚拟存储器和 Cache 的区别</h3><ul>
+<li>Cache 存储器采用与 CPU 速度匹配的快速存储元件来弥补主存和 CPU 之间的<strong>速度差距</strong>；而虚拟存储器的主要功能是弥补了主存和辅存之间的<strong>容量差距</strong>。</li>
+<li>两个存储体系均以信息块作为存储层次之间基本信息的传递单位：Cache 存储器每次传递是定长的的信息块，长度只有<strong>几十字节</strong>；而虚拟存储器信息块划分方案很多，有页、段等等，长度均在<strong>几百 B~几百 KB</strong>左右。</li>
+<li>CPU 访问快速 Cache 存储器的速度比访问慢速主存快 5~10 倍。虚拟存储器中主存的速度要比辅存快 100~1000 倍以上。</li>
+<li>Cache 存储器存取信息的过程、地址变换和替换策略全部用<strong>硬件</strong>实现。主～辅层次的虚拟存储器基本上由<strong>操作系统</strong>的<strong>存储管理软件辅助一些硬件</strong>进行信息块的划分和主～辅存之间的调度。</li>
+<li>主存～ Cache 存储体系中 CPU 与 Cache 和主存都<strong>建立了直接访问的通路</strong>，一旦在主存命中，CPU 将直接访问主存；辅助存储器与 CPU 之间<strong>没有直接通路</strong>，一旦在主存不命中，只能从辅存调度信息块到主存。同时因为辅存的速度相对 CPU 差距太大，调度需要毫秒级时间，因此 CPU 一般将改换执行另一个程序，等到调度完成后再返回原程序继续工作。</li>
+</ul>
+<h3 id="页式虚拟存储器"><a href="#页式虚拟存储器" class="headerlink" title="页式虚拟存储器"></a>页式虚拟存储器</h3><ul>
+<li>页是主存物理空间中划分出来的等长的固定区域。</li>
+<li>页式虚拟存储系统中，虚拟空间分成页，称为逻辑页；主存空间也分成同样大小的页，称为物理页。</li>
+<li>虚存地址分为两个字段：逻辑页号 页内行地址</li>
+<li>实存地址也分两个字段：物理页号 页内行地址</li>
+<li>~虚拟存储器地址~到~主存地址~的变换是由放在主存的页表实现的。</li>
+<li>页表中每一个虚存逻辑页号有一个表目，表目内容包含该逻辑页所在的主存页面地址(物理页号)，用它作为实存地址的高字段，与虚存地址的页内行地址字段相拼接，产生完整的实主存地址，据此来访问主存。</li>
+<li>为了避免页表已保存或已调入主存储器时对主存访问次数的增多，把页表的最活跃部分存放在高速存储器中组成快表。</li>
+<li>快表由硬件组成，比页表小得多，只是慢表的小副本。查表时，由逻辑页号同时去查快表和慢表，当在快表中有此逻辑页号时，就能很快地找到对应的物理页号送入实主存地址寄存器。</li>
+<li><strong>优点</strong>是页面的起点和终点地址是固定的,方便造页表,新页调入主存也很容易掌握，比段式空间浪费小。</li>
+<li><strong>缺点</strong>是处理、保护和共享都不及段式来得方便。</li>
+</ul>
+<h3 id="段式虚拟存储器"><a href="#段式虚拟存储器" class="headerlink" title="段式虚拟存储器"></a>段式虚拟存储器</h3><ul>
+<li>段是按照程序的逻辑结构划分成的多个相对独立部分，作为独立的逻辑单位，各个段的长度因程序而异。</li>
+<li>虚拟地址由段号和段内地址组成，为了把虚拟地址变换成实主存地址，需要一个段表。</li>
+<li><strong>优点</strong>是段的逻辑独立性使它易于编译、管理、修改和保护，也便于多道程序共享；某些类型的段具有动态可变长度,允许自由调度以便有效利用主存空间。</li>
+<li><strong>缺点</strong>是因为段的长度各不相同，起点和终点不定，给主存空间分配带来麻烦，而且容易在段间留下许多空余的零碎存储空间，造成浪费。</li>
+</ul>
+<h3 id="段页式虚拟存储器"><a href="#段页式虚拟存储器" class="headerlink" title="段页式虚拟存储器"></a>段页式虚拟存储器</h3><ul>
+<li>段页式虚拟存储器是段式虚拟存储器和页式虚拟存储器的结合。</li>
+<li>它把程序按逻辑单位分段以后，再把每段分成固定大小的页。</li>
+<li>程序对主存的调入调出是按页面进行的，但它又可以按段实现共享和保护，兼备页式和段式的优点。</li>
+<li>缺点是在映象过程中需要多次查表。</li>
+</ul>
+<hr>
+<h2 id="存储校验技术"><a href="#存储校验技术" class="headerlink" title="存储校验技术"></a>存储校验技术</h2><h3 id="检错码"><a href="#检错码" class="headerlink" title="检错码"></a>检错码</h3><ul>
+<li>奇偶校验包含奇校验和偶校验两种校验。</li>
+<li><strong>奇校验</strong>约定的编码规律，是让整个校验码（包含有效信息和校验位）中<strong>“1”</strong>的个数为奇数。</li>
+<li><strong>偶校验</strong>约定的编码规律，是让整个校验码中<strong>“1”</strong>的个数为偶数。</li>
+<li>这个校验位取“0” 还是取“1”的原则是：<br>若是奇校验，则连同校验位在内编码里含<strong>“1”</strong>的个数共有奇数个；<br>若是偶校验，则连同校验位在内编码里含<strong>“1”</strong>的个数是偶数个。</li>
+</ul>
+<h3 id="纠错码"><a href="#纠错码" class="headerlink" title="纠错码"></a>纠错码</h3><ul>
+<li>常用的纠错码有海明码、循环码等。</li>
+<li>只要使用足够的校验位，就可以达到对任何错误的检测和纠错水平。</li>
+<li>若需要校正字长 <strong>k</strong>位的单错，则必须添加 <strong>r</strong>个校验位，它能够指出<strong>k+r</strong>个错误及无错误的情况，<strong>r</strong>必须满足 <strong>2 的 r 次方 ≥k+r+1</strong>。</li>
+</ul>
+  	
+					
+	  </div>     
+	  
+
+	<div class="post-footer">
+
+  <div class="post-footer-other">
+      <span class="post-footer-item">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img" src="/blog/images/wechat.png" alt="No Donate Image!">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img" src="/blog/images/avatar.png" alt="No Donate Image!">	
+	</div>
+
+	<span class="donate-word"></span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+      </span>           
+      <span class="post-footer-item">
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=2837ebe4fd6c8"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		<div class="-mob-inner">
+		   			             
+            <a class="iconfont icon-share-qq -mob-share-link"></a>		
+     	   			             
+            <a class="iconfont icon-share-weixin -mob-share-link"></a>		
+     	   
+		</div>
+	</div>	
+
+      </span>           
+  </div>  
+
+  <div class="post-footer-meta">
+        	
+
+        
+          <i class="iconfont icon-tag"></i>     
+            <a class="tag-link" href="/blog/tags/计算机组成原理/">计算机组成原理</a>    
+        	
+  </div>
+
+</div>
+
+
+<nav class="post-footer-nav">
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/49447/" id="post-nav-newer" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">newer</strong>
+           
+          <a class="post-nav-title" href="/blog/posts/49447/">
+          计算机组成原理——指令系统</a>
+      </a>
+    </div>
+  
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/24844/" id="post-nav-older" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">older</strong>
+        
+          <a class="post-nav-title" href="/blog/posts/24844/">
+          计算机组成原理——运算方法与运算器</a>
+      </a>
+    </div>
+  
+</nav>
+ 
+	
+
+
+    <div id="comment">   
+    </div>
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+
+    <script src="//unpkg.com/valine@v1.1.8-beta/dist/Valine.min.js"></script>
+
+    <script>
+        new Valine({
+        av: AV,
+        el: '#comment',
+        notify:false, 
+        verify:false, 
+        app_id: '7kxu60nBeUEAJKLWktcgg0mz-9Nh9j0Va',
+        app_key: 'N40K3DuKj3WpLWwPJSbmuRyC',  
+        path:window.location.pathname, 
+        guest_info:['nick','mail'],
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!'
+        });
+    </script>
+	
+</article>
+
+	<div class="toc-container">
+			<div class="toc-sidebar">
+			<p class="toc-title">
+				CONTENT
+			</p>
+			<div class="toc-list">
+				<ol class="toc-inner"><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#存储器的分类"><span class="toc-inner-text">存储器的分类</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#存储器的分级结构"><span class="toc-inner-text">存储器的分级结构</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#主存储器"><span class="toc-inner-text">主存储器</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#主存储器的性能指标"><span class="toc-inner-text">主存储器的性能指标</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#半导体存储器芯片"><span class="toc-inner-text">半导体存储器芯片</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#存储器与-CPU-的连接"><span class="toc-inner-text">存储器与 CPU 的连接</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#高速缓冲存储器"><span class="toc-inner-text">高速缓冲存储器</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#Cache-的功能与基本原理"><span class="toc-inner-text">Cache 的功能与基本原理</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#主存与-Cache-的地址映射"><span class="toc-inner-text">主存与 Cache 的地址映射</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#多体交叉存储器"><span class="toc-inner-text">多体交叉存储器</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#虚拟存储器"><span class="toc-inner-text">虚拟存储器</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#基本概念"><span class="toc-inner-text">基本概念</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#实地址和虚地址"><span class="toc-inner-text">实地址和虚地址</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#虚拟存储器和-Cache-的区别"><span class="toc-inner-text">虚拟存储器和 Cache 的区别</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#页式虚拟存储器"><span class="toc-inner-text">页式虚拟存储器</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#段式虚拟存储器"><span class="toc-inner-text">段式虚拟存储器</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#段页式虚拟存储器"><span class="toc-inner-text">段页式虚拟存储器</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#存储校验技术"><span class="toc-inner-text">存储校验技术</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#检错码"><span class="toc-inner-text">检错码</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#纠错码"><span class="toc-inner-text">纠错码</span></a></li></ol></li></ol>
+			</div>
+		</div>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">
+            <span class="search-cancel">
+                <i class="iconfont icon-cancel">
+            </i></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+    <div class="mobile-menu">
+  
+  <img class="mobile-menu-icon lazyload" src="/blog/images/placeholder.png" data-src="/blog/images/favicon.png">
+    
+
+  <a class="mobile-menu-link" href="/blog/">首页
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/archives">归档
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/tags">标签
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/about">关于
+  </a>
+    
+
+  <a class="mobile-menu-link mobile-menu-search" href="#">搜索
+  </a>
+   
+</div>
+        
+    
+
+
+
+     
+     
+
+<footer id="footer">
+  <div class="footer-copyright">
+    &copy;  2018-  2022 Keen King
+    <br>
+
+    Theme by
+    <a href="https://github.com/Lemonreds/hexo-theme-Nayo" target="_blank">Nayo</a>
+  </div>
+</footer>
+   
+
+  
+
+    <script src="/blog/nayo.bundle.js"></script>     
+    
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/blog/js/fireworks.js"></script>
+
+
+  </body>        
+</html>

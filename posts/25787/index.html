@@ -1,0 +1,334 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  React路由守卫和全局loading控制 |   KeenKing的个人博客 </title>
+
+ 
+  
+    <link rel="icon" href="/blog/images/favicon.png">
+  
+
+
+  <link rel="stylesheet" href="/blog/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <head><meta name="generator" content="Hexo 3.9.0">
+  <meta name="referrer" content="no-referrer">
+</head>
+
+<header class="header">
+	
+  <nav class="header-nav">        
+
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-logo">
+      <a href="/blog">
+        <img class="header-logo-img" src="/blog/images/favicon.png">
+      </a>
+    </div>
+
+    <div class="header-menu">          
+              
+          
+            <a class="header-menu-link" id="header-menu-home" href="/blog/">
+              <i class="iconfont icon-home">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-archives" href="/blog/archives">
+              <i class="iconfont icon-archives">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-tags" href="/blog/tags">
+              <i class="iconfont icon-tags">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-about" href="/blog/about">
+              <i class="iconfont icon-about">  
+            </i></a>     
+          
+              
+          
+              <a class="header-menu-link" id="header-menu-search">
+                <i class="iconfont icon-search">  
+              </i></a>
+          
+                  
+    </div>  
+    
+  </nav>
+</header>
+
+   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+  <p class="post-title">
+    React路由守卫和全局loading控制
+  </p>
+
+  <div class="meta-info">
+    <span>
+      11月 26, 2019
+    </span>
+
+     
+    <i class="iconfont icon-words"></i>
+    <span>
+      3593
+    </span>
+    
+  </div>
+</div>
+ 
+	 
+
+	  <div class="typo post-content slideDownMin">
+
+		
+
+			
+					<p>在前后端分离的项目中，我们通常会遇到实现前端路由权限的需求以及全局 loading 效果的需求，在 Vue 项目中，我们可以通过路由守卫 beforEach、afterEach 这个两个钩子函数来实现进入一个路由时的全局 loading 效果。而 vue-router 也提供了灵活的路由配置项允许我们赋予路由更多的信息，包括权限等等。反观 react-router 并没有直接提供给这样的组件。虽然说 vue-router 本身就提供了灵活的配置，但是 React 高阶组件也赋予了我们大展身手的机会。</p>
+<a id="more"></a>
+<h2 id="封装路由组件"><a href="#封装路由组件" class="headerlink" title="封装路由组件"></a>封装路由组件</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const App: React.FC = () =&gt; (</span><br><span class="line">  &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">    &lt;div className=&quot;App&quot;&gt;</span><br><span class="line">      &lt;Switch&gt;</span><br><span class="line">        &lt;AuthRoute config=&#123;RouteConfig&#125; /&gt;</span><br><span class="line">      &lt;/Switch&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  &lt;/Provider&gt;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">export default withRouter(App);</span><br></pre></td></tr></table></figure>
+<p>在最外部我们不使用 react-router 提供的 Route 的组件，而是使用我们自己封装的路由组件，这个组件接受一个 config 参数，传入路由配置，这样我们也可以像 vue 中那样编写路由配置文件了。</p>
+<h2 id="路由配置文件"><a href="#路由配置文件" class="headerlink" title="路由配置文件"></a>路由配置文件</h2><p>定义单个路由配置的类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">export interface RouteItem &#123;</span><br><span class="line">  path: string;</span><br><span class="line">  component?: FC;</span><br><span class="line">  auth?: boolean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后 export 出的路由配置信息，就是由 RouteItem 组成的数组。path 代表路由路径，component 表示对应的组件，auth 表示是否需要鉴权，如果有多种角色的话，那么将 auth 设置成角色名称，后面增加一下判断方式便可。</p>
+<h2 id="全局-loading-的-Redux-设计"><a href="#全局-loading-的-Redux-设计" class="headerlink" title="全局 loading 的 Redux 设计"></a>全局 loading 的 Redux 设计</h2><p>既然要实现全局的 loading，那么使用 redux 最合适不过了。<br>这里就直接贴代码了，redux 的知识就不细说了。<br>由于使用了 combineReducers，所有我们把 loading 的状态放在了 app 这个 reducer 中。<br><strong>actionTypes.ts</strong></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> SET_LOADING = <span class="string">"SET_LOADING"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 设置页面的loading状态</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  SET_LOADING</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><strong>app.action.ts</strong></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> actionTypes <span class="keyword">from</span> <span class="string">"./actionTypes"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> setLoading = <span class="function">(<span class="params">newStatus: <span class="built_in">boolean</span></span>) =&gt;</span> (&#123;</span><br><span class="line">  <span class="keyword">type</span>: actionTypes.SET_LOADING,</span><br><span class="line">  data: newStatus</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><strong>app.reducer.ts</strong></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> actionTypes <span class="keyword">from</span> <span class="string">"./actionTypes"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">interface</span> AppState &#123;</span><br><span class="line">  loading: <span class="built_in">boolean</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> defaultState: AppState = &#123;</span><br><span class="line">  loading: <span class="literal">false</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> (state = defaultState, action: <span class="built_in">any</span>) =&gt; &#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">    <span class="keyword">case</span> actionTypes.SET_LOADING:</span><br><span class="line">      <span class="keyword">return</span> &#123; ...state, loading: action.data &#125;;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="实现-AuthRoute-组件"><a href="#实现-AuthRoute-组件" class="headerlink" title="实现 AuthRoute 组件"></a>实现 AuthRoute 组件</h2><p>由于 AuthRoute 组件放在了 Switch 组件内部，React Router 还自动为 AuthRoute 注入了 location 属性，当地址栏的路由发生变化时，就会触发 location 属性对象上的 pathname 属性发生变化，我们根据这个变化，再去匹配先前写好的路由配置获得相应的组件重新渲染就可以了。</p>
+<h3 id="实现全局-loading"><a href="#实现全局-loading" class="headerlink" title="实现全局 loading"></a>实现全局 loading</h3><p>我们只需要在 Route 组件的外部包裹一层 Spin 组件就可以了，spin 组件的 loading 状态就是 redux 中的 loading，如果需要根据网络请求来决定 loading 时间，只需要在相应的组件里设置 loading 的值就可以了，为了方便看效果，我这里就直接用定时器了。</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">const AuthRoute: React.FC&lt;any&gt; = props =&gt; &#123;</span><br><span class="line">  const dispatch = useDispatch();</span><br><span class="line">  const loading: boolean = useSelector((state: Store) =&gt; state.app.loading);</span><br><span class="line"></span><br><span class="line">  const &#123; pathname &#125; = props.location;</span><br><span class="line">  const isLogin = localStorage.getItem(&quot;user_token&quot;);</span><br><span class="line">  let timer = 0;</span><br><span class="line"></span><br><span class="line">  useEffect(() =&gt; &#123;</span><br><span class="line">    window.scrollTo(0, 0);</span><br><span class="line">    dispatch(setLoading(true));</span><br><span class="line">    clearTimeout(timer);</span><br><span class="line">    timer = window.setTimeout(() =&gt; &#123;</span><br><span class="line">      dispatch(setLoading(false));</span><br><span class="line">    &#125;, 1000);</span><br><span class="line">  &#125;, [pathname]);</span><br><span class="line"></span><br><span class="line">  const targetRouterConfig: RouteItem = props.config.find(</span><br><span class="line">    (v: RouteItem) =&gt; v.path === pathname</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  if (targetRouterConfig &amp;&amp; !targetRouterConfig.auth &amp;&amp; !isLogin) &#123;</span><br><span class="line">    const &#123; component &#125; = targetRouterConfig;</span><br><span class="line">    return &lt;Route exact path=&#123;pathname&#125; component=&#123;component&#125; /&gt;;</span><br><span class="line">  &#125;</span><br><span class="line">  if (isLogin) &#123;</span><br><span class="line">    // 如果是登陆状态，想要跳转到登陆，重定向到主页</span><br><span class="line">    if (pathname === &quot;/login&quot;) &#123;</span><br><span class="line">      return &lt;Redirect to=&quot;/&quot; /&gt;;</span><br><span class="line">    &#125;</span><br><span class="line">    // 如果路由合法，就跳转到相应的路由</span><br><span class="line">    if (targetRouterConfig) &#123;</span><br><span class="line">      return (</span><br><span class="line">        &lt;Spin</span><br><span class="line">          tip=&quot;Loading&quot;</span><br><span class="line">          size=&quot;large&quot;</span><br><span class="line">          spinning=&#123;loading&#125;</span><br><span class="line">          // indicator=&#123;&lt;Icon type=&quot;loading&quot; style=&#123;&#123; fontSize: 24 &#125;&#125; spin /&gt;&#125;</span><br><span class="line">          style=&#123;&#123; maxHeight: &quot;none&quot; &#125;&#125;</span><br><span class="line">        &gt;</span><br><span class="line">          &lt;Route path=&#123;pathname&#125; component=&#123;targetRouterConfig.component&#125; /&gt;</span><br><span class="line">        &lt;/Spin&gt;</span><br><span class="line">      );</span><br><span class="line">    &#125;</span><br><span class="line">    // 如果路由不合法，重定向到 404 页面</span><br><span class="line">    return &lt;Redirect to=&quot;/404&quot; /&gt;;</span><br><span class="line">  &#125;</span><br><span class="line">  // 非登陆状态下，当路由合法时且需要权限校验时，跳转到登陆页面，要求登陆</span><br><span class="line">  if (targetRouterConfig &amp;&amp; targetRouterConfig.auth) &#123;</span><br><span class="line">    return &lt;Redirect to=&quot;/login&quot; /&gt;;</span><br><span class="line">  &#125;</span><br><span class="line">  // 非登陆状态下，路由不合法时，重定向至 404</span><br><span class="line">  return &lt;Redirect to=&quot;/404&quot; /&gt;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">export default AuthRoute;</span><br></pre></td></tr></table></figure>
+  	
+					
+	  </div>     
+	  
+
+	<div class="post-footer">
+
+  <div class="post-footer-other">
+      <span class="post-footer-item">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img" src="/blog/images/wechat.png" alt="No Donate Image!">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img" src="/blog/images/avatar.png" alt="No Donate Image!">	
+	</div>
+
+	<span class="donate-word"></span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+      </span>           
+      <span class="post-footer-item">
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=2837ebe4fd6c8"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		<div class="-mob-inner">
+		   			             
+            <a class="iconfont icon-share-qq -mob-share-link"></a>		
+     	   			             
+            <a class="iconfont icon-share-weixin -mob-share-link"></a>		
+     	   
+		</div>
+	</div>	
+
+      </span>           
+  </div>  
+
+  <div class="post-footer-meta">
+        	
+
+        
+          <i class="iconfont icon-tag"></i>     
+            <a class="tag-link" href="/blog/tags/react/">react</a>    
+        	
+  </div>
+
+</div>
+
+
+<nav class="post-footer-nav">
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/52968/" id="post-nav-newer" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">newer</strong>
+           
+          <a class="post-nav-title" href="/blog/posts/52968/">
+          React Hooks概览</a>
+      </a>
+    </div>
+  
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/35045/" id="post-nav-older" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">older</strong>
+        
+          <a class="post-nav-title" href="/blog/posts/35045/">
+          React Fiber调度机制</a>
+      </a>
+    </div>
+  
+</nav>
+ 
+	
+
+
+    <div id="comment">   
+    </div>
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+
+    <script src="//unpkg.com/valine@v1.1.8-beta/dist/Valine.min.js"></script>
+
+    <script>
+        new Valine({
+        av: AV,
+        el: '#comment',
+        notify:false, 
+        verify:false, 
+        app_id: '7kxu60nBeUEAJKLWktcgg0mz-9Nh9j0Va',
+        app_key: 'N40K3DuKj3WpLWwPJSbmuRyC',  
+        path:window.location.pathname, 
+        guest_info:['nick','mail'],
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!'
+        });
+    </script>
+	
+</article>
+
+	<div class="toc-container">
+			<div class="toc-sidebar">
+			<p class="toc-title">
+				CONTENT
+			</p>
+			<div class="toc-list">
+				<ol class="toc-inner"><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#封装路由组件"><span class="toc-inner-text">封装路由组件</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#路由配置文件"><span class="toc-inner-text">路由配置文件</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#全局-loading-的-Redux-设计"><span class="toc-inner-text">全局 loading 的 Redux 设计</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#实现-AuthRoute-组件"><span class="toc-inner-text">实现 AuthRoute 组件</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#实现全局-loading"><span class="toc-inner-text">实现全局 loading</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#代码"><span class="toc-inner-text">代码</span></a></li></ol></li></ol>
+			</div>
+		</div>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">
+            <span class="search-cancel">
+                <i class="iconfont icon-cancel">
+            </i></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+    <div class="mobile-menu">
+  
+  <img class="mobile-menu-icon" src="/blog/images/favicon.png">
+    
+
+  <a class="mobile-menu-link" href="/blog/">首页
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/archives">归档
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/tags">标签
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/about">关于
+  </a>
+    
+
+  <a class="mobile-menu-link mobile-menu-search" href="#">搜索
+  </a>
+   
+</div>
+        
+    
+
+
+
+     
+     
+
+<footer id="footer">
+  <div class="footer-copyright">
+    &copy;  2018-  2022 Keen King
+    <br>
+
+    Theme by
+    <a href="https://github.com/Lemonreds/hexo-theme-Nayo" target="_blank">Nayo</a>
+  </div>
+</footer>
+   
+
+  
+
+    <script src="/blog/nayo.bundle.js"></script>     
+    
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/blog/js/fireworks.js"></script>
+
+
+  </body>        
+</html>

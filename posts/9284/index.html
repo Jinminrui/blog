@@ -1,0 +1,334 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  关于Vue生命周期 |   KeenKing的个人博客 </title>
+
+ 
+  
+    <link rel="icon" href="/blog/images/favicon.png">
+  
+
+
+  <link rel="stylesheet" href="/blog/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <head><meta name="generator" content="Hexo 3.9.0">
+  <meta name="referrer" content="no-referrer">
+</head>
+
+<header class="header">
+	
+  <nav class="header-nav">        
+
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-logo">
+      <a href="/blog">
+        <img class="header-logo-img" src="/blog/images/favicon.png">
+      </a>
+    </div>
+
+    <div class="header-menu">          
+              
+          
+            <a class="header-menu-link" id="header-menu-home" href="/blog/">
+              <i class="iconfont icon-home">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-archives" href="/blog/archives">
+              <i class="iconfont icon-archives">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-tags" href="/blog/tags">
+              <i class="iconfont icon-tags">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-about" href="/blog/about">
+              <i class="iconfont icon-about">  
+            </i></a>     
+          
+              
+          
+              <a class="header-menu-link" id="header-menu-search">
+                <i class="iconfont icon-search">  
+              </i></a>
+          
+                  
+    </div>  
+    
+  </nav>
+</header>
+
+   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+  <p class="post-title">
+    关于Vue生命周期
+  </p>
+
+  <div class="meta-info">
+    <span>
+      10月 12, 2018
+    </span>
+
+     
+    <i class="iconfont icon-words"></i>
+    <span>
+      1128
+    </span>
+    
+  </div>
+</div>
+ 
+	 
+
+	  <div class="typo post-content slideDownMin">
+
+		
+
+			
+					<h3 id="vue-提供了如下的钩子函数供我们在-vue-生命周期的不同时刻调用："><a href="#vue-提供了如下的钩子函数供我们在-vue-生命周期的不同时刻调用：" class="headerlink" title="vue 提供了如下的钩子函数供我们在 vue 生命周期的不同时刻调用："></a>vue 提供了如下的钩子函数供我们在 vue 生命周期的不同时刻调用：</h3><ul>
+<li>beforeCreate</li>
+<li>created</li>
+<li>beforeMount</li>
+<li>mounted</li>
+<li>beforeUpdate</li>
+<li>updated</li>
+<li>beforeDestroy</li>
+<li>destroyed<a id="more"></a>
+</li>
+</ul>
+<hr>
+<h3 id="1、在-beforeCreate-和-created-钩子函数之间的生命周期"><a href="#1、在-beforeCreate-和-created-钩子函数之间的生命周期" class="headerlink" title="1、在 beforeCreate 和 created 钩子函数之间的生命周期"></a>1、在 beforeCreate 和 created 钩子函数之间的生命周期</h3><p>在这个生命周期之间，进行初始化事件，进行数据的观测，可以看到在 created 的时候数据已经和 data 属性进行绑定（放在 data 中的属性当值发生改变的同时，视图也会改变）。<br>~注意看下：此时还是没有 el 选项~</p>
+<hr>
+<h3 id="2、created-钩子函数和-beforeMount-间的生命周期"><a href="#2、created-钩子函数和-beforeMount-间的生命周期" class="headerlink" title="2、created 钩子函数和 beforeMount 间的生命周期"></a>2、created 钩子函数和 beforeMount 间的生命周期</h3><p><img src="http://ww1.sinaimg.cn/large/005ZR24Xgy1g0rxu6kbm0j30fv0e5wf7.jpg" alt></p>
+<p>首先会判断对象是否有 el 选项。如果有的话就继续向下编译，如果没有 el 选项，则停止编译，也就意味着停止了生命周期，直到在该 vue 实例上调用 vm.\$mount(el)。<br><strong>template 参数对生命周期的影响</strong>：<br>（1）如果 vue 实例对象中有 template 参数选项，则将其作为模板编译成 render 函数。<br>（2）如果没有 template 选项，则将外部 HTML 作为模板编译。<br>（3）可以看到 template 中的模板优先级要高于 outer HTML 的优先级。<br><em>在 vue 对象中还有一个 render 函数，它是以 createElement 作为参数，然后做渲染操作，而且我们可以直接嵌入 JSX.</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">new Vue(&#123;</span><br><span class="line">    el: &apos;#app&apos;,</span><br><span class="line">    render: function(createElement) &#123;</span><br><span class="line">        return createElement(&apos;h1&apos;, &apos;this is createElement&apos;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>综合排名优先级：<br><strong>render 函数选项 &gt; template 选项 &gt; outer HTML.</strong></p>
+<hr>
+<h3 id="3、beforeMount-和-mounted-钩子函数间的生命周期"><a href="#3、beforeMount-和-mounted-钩子函数间的生命周期" class="headerlink" title="3、beforeMount 和 mounted 钩子函数间的生命周期"></a>3、beforeMount 和 mounted 钩子函数间的生命周期</h3><p>此时是给 vue 实例对象添加\$el 成员，并且替换掉挂在的 DOM 元素。<br><img src="http://ww1.sinaimg.cn/large/005ZR24Xgy1g0rxueehk8j30cj05iq31.jpg" alt></p>
+<hr>
+<h3 id="4、mounted"><a href="#4、mounted" class="headerlink" title="4、mounted"></a>4、mounted</h3><p>在 mounted 之前 h1 中还是通过进行占位的，因为此时还有挂在到页面上，还是 JavaScript 中的虚拟 DOM 形式存在的。在 mounted 之后可以看到 h1 中的内容发生了变化。<br><img src="http://ww1.sinaimg.cn/large/005ZR24Xgy1g0rxun0wvhj30bs07mdg6.jpg" alt></p>
+<hr>
+<h3 id="5、beforeUpdate-钩子函数和-updated-钩子函数间的生命周期"><a href="#5、beforeUpdate-钩子函数和-updated-钩子函数间的生命周期" class="headerlink" title="5、beforeUpdate 钩子函数和 updated 钩子函数间的生命周期"></a>5、beforeUpdate 钩子函数和 updated 钩子函数间的生命周期</h3><p>当 vue 发现 data 中的数据发生了改变，会触发对应组件的重新渲染，先后调用 beforeUpdate 和 updated 钩子函数。在 beforeUpdate,可以监听到 data 的变化但是 view 层没有被重新渲染，view 层的数据没有变化。等到 updated 的时候 view 层才被重新渲染，数据更新。</p>
+<hr>
+  	
+					
+	  </div>     
+	  
+
+	<div class="post-footer">
+
+  <div class="post-footer-other">
+      <span class="post-footer-item">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img" src="/blog/images/wechat.png" alt="No Donate Image!">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img lazyload" src="/blog/images/placeholder.png" alt="No Donate Image!" data-src="/blog/images/avatar.png">	
+	</div>
+
+	<span class="donate-word"></span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+      </span>           
+      <span class="post-footer-item">
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=2837ebe4fd6c8"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		<div class="-mob-inner">
+		   			             
+            <a class="iconfont icon-share-qq -mob-share-link"></a>		
+     	   			             
+            <a class="iconfont icon-share-weixin -mob-share-link"></a>		
+     	   
+		</div>
+	</div>	
+
+      </span>           
+  </div>  
+
+  <div class="post-footer-meta">
+        	
+
+        
+          <i class="iconfont icon-tag"></i>     
+            <a class="tag-link" href="/blog/tags/Vue-js/">Vue.js</a>    
+        	
+  </div>
+
+</div>
+
+
+<nav class="post-footer-nav">
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/64586/" id="post-nav-newer" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">newer</strong>
+           
+          <a class="post-nav-title" href="/blog/posts/64586/">
+          Vue-Router基础</a>
+      </a>
+    </div>
+  
+  
+</nav>
+ 
+	
+
+
+    <div id="comment">   
+    </div>
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+
+    <script src="//unpkg.com/valine@v1.1.8-beta/dist/Valine.min.js"></script>
+
+    <script>
+        new Valine({
+        av: AV,
+        el: '#comment',
+        notify:false, 
+        verify:false, 
+        app_id: '7kxu60nBeUEAJKLWktcgg0mz-9Nh9j0Va',
+        app_key: 'N40K3DuKj3WpLWwPJSbmuRyC',  
+        path:window.location.pathname, 
+        guest_info:['nick','mail'],
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!'
+        });
+    </script>
+	
+</article>
+
+	<div class="toc-container">
+			<div class="toc-sidebar">
+			<p class="toc-title">
+				CONTENT
+			</p>
+			<div class="toc-list">
+				<ol class="toc-inner"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#vue-提供了如下的钩子函数供我们在-vue-生命周期的不同时刻调用："><span class="toc-inner-text">vue 提供了如下的钩子函数供我们在 vue 生命周期的不同时刻调用：</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#1、在-beforeCreate-和-created-钩子函数之间的生命周期"><span class="toc-inner-text">1、在 beforeCreate 和 created 钩子函数之间的生命周期</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#2、created-钩子函数和-beforeMount-间的生命周期"><span class="toc-inner-text">2、created 钩子函数和 beforeMount 间的生命周期</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#3、beforeMount-和-mounted-钩子函数间的生命周期"><span class="toc-inner-text">3、beforeMount 和 mounted 钩子函数间的生命周期</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#4、mounted"><span class="toc-inner-text">4、mounted</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#5、beforeUpdate-钩子函数和-updated-钩子函数间的生命周期"><span class="toc-inner-text">5、beforeUpdate 钩子函数和 updated 钩子函数间的生命周期</span></a></li></ol>
+			</div>
+		</div>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">
+            <span class="search-cancel">
+                <i class="iconfont icon-cancel">
+            </i></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+    <div class="mobile-menu">
+  
+  <img class="mobile-menu-icon lazyload" src="/blog/images/placeholder.png" data-src="/blog/images/favicon.png">
+    
+
+  <a class="mobile-menu-link" href="/blog/">首页
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/archives">归档
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/tags">标签
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/about">关于
+  </a>
+    
+
+  <a class="mobile-menu-link mobile-menu-search" href="#">搜索
+  </a>
+   
+</div>
+        
+    
+
+
+
+     
+     
+
+<footer id="footer">
+  <div class="footer-copyright">
+    &copy;  2018-  2022 Keen King
+    <br>
+
+    Theme by
+    <a href="https://github.com/Lemonreds/hexo-theme-Nayo" target="_blank">Nayo</a>
+  </div>
+</footer>
+   
+
+  
+
+    <script src="/blog/nayo.bundle.js"></script>     
+    
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/blog/js/fireworks.js"></script>
+
+
+  </body>        
+</html>

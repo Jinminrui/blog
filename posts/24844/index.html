@@ -1,0 +1,354 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  计算机组成原理——运算方法与运算器 |   KeenKing的个人博客 </title>
+
+ 
+  
+    <link rel="icon" href="/blog/images/favicon.png">
+  
+
+
+  <link rel="stylesheet" href="/blog/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <head><meta name="generator" content="Hexo 3.9.0">
+  <meta name="referrer" content="no-referrer">
+</head>
+
+<header class="header">
+	
+  <nav class="header-nav">        
+
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-logo">
+      <a href="/blog">
+        <img class="header-logo-img" src="/blog/images/favicon.png">
+      </a>
+    </div>
+
+    <div class="header-menu">          
+              
+          
+            <a class="header-menu-link" id="header-menu-home" href="/blog/">
+              <i class="iconfont icon-home">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-archives" href="/blog/archives">
+              <i class="iconfont icon-archives">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-tags" href="/blog/tags">
+              <i class="iconfont icon-tags">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-about" href="/blog/about">
+              <i class="iconfont icon-about">  
+            </i></a>     
+          
+              
+          
+              <a class="header-menu-link" id="header-menu-search">
+                <i class="iconfont icon-search">  
+              </i></a>
+          
+                  
+    </div>  
+    
+  </nav>
+</header>
+
+   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+  <p class="post-title">
+    计算机组成原理——运算方法与运算器
+  </p>
+
+  <div class="meta-info">
+    <span>
+      1月 04, 2019
+    </span>
+
+     
+    <i class="iconfont icon-words"></i>
+    <span>
+      917
+    </span>
+    
+  </div>
+</div>
+ 
+	 
+
+	  <div class="typo post-content slideDownMin">
+
+		
+
+			
+					<h2 id="数值数据的表示"><a href="#数值数据的表示" class="headerlink" title="数值数据的表示"></a>数值数据的表示</h2><ul>
+<li>计算机中的数据表示，包括定点数、浮点数、字符、十进制数的表示方法 ;</li>
+<li>原码、补码、反码、移码等码制之间的关系以及各码制之间真值数的转换；</li>
+<li><strong>原码求补码的方法</strong>：<br>正数，不变，即原码=补码<br>负数，符号位不变，数值为取反并加 1</li>
+<li>补码中零只有一个：0.0000000 补码 1.0000000 表示负 1</li>
+</ul>
+<a id="more"></a>
+<h3 id="原码"><a href="#原码" class="headerlink" title="原码"></a>原码</h3><ul>
+<li>如果机器字长为 n，那么一个数的原码就是用一个 n 位的二进制数，其中最高位为符号位：正数为 0，负数为 1。剩下的 n-1 位表示该数的绝对值</li>
+<li>正数的原、反、补码都一样，0 的原码跟反码都有两个，因为这里 0 被分为+0 和-0。</li>
+</ul>
+<h3 id="反码"><a href="#反码" class="headerlink" title="反码"></a>反码</h3><ul>
+<li>反码就是在原码的基础上，符号位不变其他位按位取反(就是 0 变 1，1 变 0)就可以了</li>
+</ul>
+<h3 id="补码"><a href="#补码" class="headerlink" title="补码"></a>补码</h3><ul>
+<li>补码也非常的简单，就是在反码的基础上按照正常的加法运算加 1</li>
+<li>负数的补码这么记更简单： ~符号位不变，其他的从低位开始，直到遇见第一个 1 之前，什么都不变；遇见第一个 1 后保留这个 1，以后按位取反~</li>
+<li>除此之外，还可以用 [1000_0000]补 表示-128：<br>(-1) + (-127) = [1000_0001]原 + [1111_1111]原 = [1111_1111]补 + [1000_0001]补 = [1000_0000]补<br>-1-127 的结果应该是-128，在用补码运算的结果中， [1000_0000]补 就代表-128。<br>注意，-128 并没有原码和反码表示。</li>
+</ul>
+<h3 id="移码"><a href="#移码" class="headerlink" title="移码"></a>移码</h3><ul>
+<li>移码最简单了，不管正负数，只要将其补码的符号位取反即可。</li>
+</ul>
+<h3 id="数的浮点表示法"><a href="#数的浮点表示法" class="headerlink" title="数的浮点表示法"></a>数的浮点表示法</h3><p>阶码决定范围，尾数决定精度。</p>
+<ul>
+<li><strong>浮点数的规格化</strong><br>为了使浮点表示法有尽可能高的精度，采取的措施之一是增加位数，或者在字长一定的情况下将阶码和尾数所占的位数协调好，措施之二是采用浮点数规格化表示，就是通过调整界面，使其尾数满足以下形式：<br>原码规格化后： 正数为 0.1×……× 的形式，负数为 1.1×……× 的形式。<br>补码规格化后 ： 正数为 0.1×……× 的形式，负数为 1.0×……× 的形式。</li>
+</ul>
+<h3 id="非数值数据的表示"><a href="#非数值数据的表示" class="headerlink" title="非数值数据的表示"></a>非数值数据的表示</h3><ul>
+<li>ASCII 码有 7 位，总共 128 个，最高位区分是否是汉字</li>
+<li>区位码（十六进制）+ 2020H = 国标码</li>
+<li>机内码 = 国标码 + 8080H</li>
+<li>一个汉字占 2 个字节 16 位机内码。</li>
+</ul>
+<h2 id="定点加减法运算"><a href="#定点加减法运算" class="headerlink" title="定点加减法运算"></a>定点加减法运算</h2><h3 id="溢出判断"><a href="#溢出判断" class="headerlink" title="溢出判断"></a>溢出判断</h3><ul>
+<li>双符号位法</li>
+<li>进位判断法</li>
+</ul>
+  	
+					
+	  </div>     
+	  
+
+	<div class="post-footer">
+
+  <div class="post-footer-other">
+      <span class="post-footer-item">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img" src="/blog/images/wechat.png" alt="No Donate Image!">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img" src="/blog/images/avatar.png" alt="No Donate Image!">	
+	</div>
+
+	<span class="donate-word"></span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+      </span>           
+      <span class="post-footer-item">
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=2837ebe4fd6c8"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		<div class="-mob-inner">
+		   			             
+            <a class="iconfont icon-share-qq -mob-share-link"></a>		
+     	   			             
+            <a class="iconfont icon-share-weixin -mob-share-link"></a>		
+     	   
+		</div>
+	</div>	
+
+      </span>           
+  </div>  
+
+  <div class="post-footer-meta">
+        	
+
+        
+          <i class="iconfont icon-tag"></i>     
+            <a class="tag-link" href="/blog/tags/计算机组成原理/">计算机组成原理</a>    
+        	
+  </div>
+
+</div>
+
+
+<nav class="post-footer-nav">
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/46991/" id="post-nav-newer" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">newer</strong>
+           
+          <a class="post-nav-title" href="/blog/posts/46991/">
+          计算机组成原理——存储器及存储系统</a>
+      </a>
+    </div>
+  
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/49260/" id="post-nav-older" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">older</strong>
+        
+          <a class="post-nav-title" href="/blog/posts/49260/">
+          计算机组成原理——概述</a>
+      </a>
+    </div>
+  
+</nav>
+ 
+	
+
+
+    <div id="comment">   
+    </div>
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+
+    <script src="//unpkg.com/valine@v1.1.8-beta/dist/Valine.min.js"></script>
+
+    <script>
+        new Valine({
+        av: AV,
+        el: '#comment',
+        notify:false, 
+        verify:false, 
+        app_id: '7kxu60nBeUEAJKLWktcgg0mz-9Nh9j0Va',
+        app_key: 'N40K3DuKj3WpLWwPJSbmuRyC',  
+        path:window.location.pathname, 
+        guest_info:['nick','mail'],
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!'
+        });
+    </script>
+	
+</article>
+
+	<div class="toc-container">
+			<div class="toc-sidebar">
+			<p class="toc-title">
+				CONTENT
+			</p>
+			<div class="toc-list">
+				<ol class="toc-inner"><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#数值数据的表示"><span class="toc-inner-text">数值数据的表示</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#原码"><span class="toc-inner-text">原码</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#反码"><span class="toc-inner-text">反码</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#补码"><span class="toc-inner-text">补码</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#移码"><span class="toc-inner-text">移码</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#数的浮点表示法"><span class="toc-inner-text">数的浮点表示法</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#非数值数据的表示"><span class="toc-inner-text">非数值数据的表示</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#定点加减法运算"><span class="toc-inner-text">定点加减法运算</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#溢出判断"><span class="toc-inner-text">溢出判断</span></a></li></ol></li></ol>
+			</div>
+		</div>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">
+            <span class="search-cancel">
+                <i class="iconfont icon-cancel">
+            </i></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+    <div class="mobile-menu">
+  
+  <img class="mobile-menu-icon" src="/blog/images/favicon.png">
+    
+
+  <a class="mobile-menu-link" href="/blog/">首页
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/archives">归档
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/tags">标签
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/about">关于
+  </a>
+    
+
+  <a class="mobile-menu-link mobile-menu-search" href="#">搜索
+  </a>
+   
+</div>
+        
+    
+
+
+
+     
+     
+
+<footer id="footer">
+  <div class="footer-copyright">
+    &copy;  2018-  2022 Keen King
+    <br>
+
+    Theme by
+    <a href="https://github.com/Lemonreds/hexo-theme-Nayo" target="_blank">Nayo</a>
+  </div>
+</footer>
+   
+
+  
+
+    <script src="/blog/nayo.bundle.js"></script>     
+    
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/blog/js/fireworks.js"></script>
+
+
+  </body>        
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  React Fiber调度机制 |   KeenKing的个人博客 </title>
+
+ 
+  
+    <link rel="icon" href="/blog/images/favicon.png">
+  
+
+
+  <link rel="stylesheet" href="/blog/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <head><meta name="generator" content="Hexo 3.9.0">
+  <meta name="referrer" content="no-referrer">
+</head>
+
+<header class="header">
+	
+  <nav class="header-nav">        
+
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-logo">
+      <a href="/blog">
+        <img class="header-logo-img" src="/blog/images/favicon.png">
+      </a>
+    </div>
+
+    <div class="header-menu">          
+              
+          
+            <a class="header-menu-link" id="header-menu-home" href="/blog/">
+              <i class="iconfont icon-home">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-archives" href="/blog/archives">
+              <i class="iconfont icon-archives">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-tags" href="/blog/tags">
+              <i class="iconfont icon-tags">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-about" href="/blog/about">
+              <i class="iconfont icon-about">  
+            </i></a>     
+          
+              
+          
+              <a class="header-menu-link" id="header-menu-search">
+                <i class="iconfont icon-search">  
+              </i></a>
+          
+                  
+    </div>  
+    
+  </nav>
+</header>
+
+   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+  <p class="post-title">
+    React Fiber调度机制
+  </p>
+
+  <div class="meta-info">
+    <span>
+      10月 23, 2019
+    </span>
+
+     
+    <i class="iconfont icon-words"></i>
+    <span>
+      4348
+    </span>
+    
+  </div>
+</div>
+ 
+	 
+
+	  <div class="typo post-content slideDownMin">
+
+		
+
+			
+					<h2 id="Fiber-的使命"><a href="#Fiber-的使命" class="headerlink" title="Fiber 的使命"></a>Fiber 的使命</h2><p>我们都知道 JavaScript 是单线程的，同时只能有一个任务运行。然而浏览器除了执行 JavaScript 还有很多事情要做，比如事件处理、界面渲染和绘制、网络资源的加载和处理等等。所以当一个 JavaScript 任务长时间占据 CPU 时，后面什么事情就都做不了了，这时页面就会非常的卡顿，用户的体验会很差。</p>
+<a id="more"></a>
+<p><strong>在 React 中渲染时会递归比对 VirtualDOM 树，找出需要变动的节点，然后同步更新它们, 一气呵成。这个过程 React 称为 Reconcilation</strong>。在这个过程中，React 会长时间占用浏览器的资源，导致用户触发的事件得不到响应和掉帧。React 的 Fiber 架构就是为了解决这个问题而生。</p>
+<p><strong>为了给用户制造一种应用很快的’假象’，我们不能让一个程序长期霸占着资源. 你可以将浏览器的渲染、布局、绘制、资源加载(例如 HTML 解析)、事件响应、脚本执行视作操作系统的’进程’，我们需要通过某些调度策略合理地分配 CPU 资源，从而提高浏览器的用户响应速率, 同时兼顾任务执行效率</strong>。</p>
+<p>所以 React 通过 Fiber 架构，让自己的 Reconcilation 过程变成可被<strong>中断</strong>。 适时地让出 CPU 执行权，让浏览器能够及时地响应用户的交互。</p>
+<h2 id="何为-Fiber"><a href="#何为-Fiber" class="headerlink" title="何为 Fiber"></a>何为 Fiber</h2><p>fiber 在英文中的意思是“纤维”。在 React 中，它更像是一种数据结构或者执行单元，每当执行完一个执行单元，React 就会检查现在还剩下多少时间，如果没有时间就把控制权交出去。<br>Chrome 浏览器提供了一个接口——requestIdleCallback</p>
+<h3 id="requestIdleCallback"><a href="#requestIdleCallback" class="headerlink" title="requestIdleCallback"></a>requestIdleCallback</h3><p>页面是一帧一帧绘制出来的，当每秒绘制的帧数（FPS）达到 60 时，页面是流畅的，小于这个值时，用户会感觉到卡顿。<br>1s60 帧，所以每一帧分到的时间是 1000/60 ≈ 16 ms。所以我们书写代码时力求不让一帧的工作量超过 16ms。<br><strong>浏览器在 1 帧的时间内需要完成如下的工作：</strong></p>
+<ul>
+<li>处理用户的交互</li>
+<li>JS 解析执行</li>
+<li>帧开始。窗口尺寸变更，页面滚去等的处理</li>
+<li>requestAnimationFrame</li>
+<li>布局</li>
+<li>绘制<br>上面六个步骤完成后没超过 16 ms，说明时间有富余，此时就会执行 requestIdleCallback 里注册的任务。此外如果浏览器每一帧都被安排满了，requestIdleCallback 注册的任务有可能永远不会执行。此时可通过设置 timeout 来保证执行。</li>
+</ul>
+<p><img src="http://ww1.sinaimg.cn/large/005ZR24Xgy1g888qqynzij30ss0gfwgv.jpg" alt="1.png"><br>目前 requestIdleCallback 目前只有 Chrome 支持。所以目前 React <a href="https://github.com/facebook/react/blob/master/packages/scheduler/src/forks/SchedulerHostConfig.default.js" target="_blank" rel="noopener">自己实现了一个</a> 。它利用 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/MessageChannel" target="_blank" rel="noopener">MessageChannel</a> 模拟将回调延迟到绘制操作之后执行。</p>
+<h3 id="任务优先级"><a href="#任务优先级" class="headerlink" title="任务优先级"></a>任务优先级</h3><p>上面说了，为了避免任务被饿死，可以设置一个超时时间. <strong>这个超时时间不是死的，低优先级的可以慢慢等待, 高优先级的任务应该率先被执行</strong>. 目前 React 预定义了 5 个优先级：</p>
+<ol>
+<li>Immediate(-1) - 这个优先级的任务会同步执行, 或者说要马上执行且不能中断</li>
+<li>UserBlocking(250ms) 这些任务一般是用户交互的结果, 需要即时得到反馈</li>
+<li>Normal (5s) 应对哪些不需要立即感受到的任务，例如网络请求</li>
+<li>Low (10s) 这些任务可以放后，但是最终应该得到执行. 例如分析通知</li>
+<li>Idle (没有超时时间) 一些没有必要做的任务 (e.g. 比如隐藏的内容), 可能会被饿死</li>
+</ol>
+<p>那么如果我们使用 setState 了来更新组件，这个待更新的任务会被放进更新队列中，然后通过 requestIdleCallback 请求浏览器调度。如果当前余有时间，就会从更新队列循环弹出任务来执行，每执行完一个任务就会判断一下时间是否充足，如果充足就进行执行下一个执行单元，反之则停止执行，保存现场，等下一次有执行权时恢复。<br><img src="http://ww1.sinaimg.cn/large/005ZR24Xgy1g888ubh5pyj30qo0riglv.jpg" alt="2.png"></p>
+<h2 id="Fiber-的数据结构"><a href="#Fiber-的数据结构" class="headerlink" title="Fiber 的数据结构"></a>Fiber 的数据结构</h2><p>在 react16 之前，Reconciliation 是同步的、递归执行的。也就是说这是基于函数’调用栈‘的 Reconciliation 算法。只不过这种依赖于调用栈的方式不能随意中断、也很难被恢复, 不利于异步处理。 React 目前的做法是采用<strong>链表</strong>的数据结构，每个 VirtualDOM 节点内部现在使用<strong>Fiber</strong>表示。<br>关键属性如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Fiber = &#123;</span><br><span class="line">  tag: HOST_COMPONENT,</span><br><span class="line">  type: <span class="string">"div"</span>,</span><br><span class="line">  <span class="keyword">return</span>: parentFiber, <span class="comment">// 指向父节点</span></span><br><span class="line">  child: childFiber, <span class="comment">// 指向子节点</span></span><br><span class="line">  sibling: <span class="literal">null</span>, <span class="comment">// 指向兄弟节点</span></span><br><span class="line">  alternate: currentFiber,</span><br><span class="line">  stateNode: <span class="built_in">document</span>.createElement(<span class="string">"div"</span>) | instance,</span><br><span class="line">  props: &#123; <span class="attr">children</span>: [], <span class="attr">className</span>: <span class="string">"foo"</span> &#125;,</span><br><span class="line">  partialState: <span class="literal">null</span>,</span><br><span class="line">  effectTag: PLACEMENT,</span><br><span class="line">  effects: []</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>return 存储的是当前节点的父节点（元素），child 存储的是第一个子节点（元素），sibling 存储的是他右边第一个的兄弟节点（元素）。alternate 保存是当更新发生时候同一个节点带有新的 props 和 state 生成的新 fiber 节点。 那么虚拟 dom 的存储结构用链表的形式描述了整棵树。</p>
+<p>举个 🌰：<br><img src="http://ww1.sinaimg.cn/large/005ZR24Xgy1g9n39f0iyqj30ra0c7mxl.jpg" alt></p>
+<p>所以整个 Fiber Diff 的大致过程如下：<br>碰到一个节点和 alternate 比较并记录下需要更新的东西，并把这些更新提交到当前节点的父亲。当遍历完这颗树的时候，再通过 return 回溯到根节点。这个过程中把所有的更新全部带到根节点，再一次更新到真实的 dom 中去。</p>
+<p>这个遍历的过程是可以中断的，由于是链表结构，react 只需用一个变量存储一下暂停的节点，等下一次浏览器有空余时间的时候，再继续执行 diff。</p>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p>最后从源码角度来梳理一下整个 setState 的过程：</p>
+<ol>
+<li>setState 先把此次更新放到更新队列 updateQueue 里面，然后调用调度器开始做更新任务。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// react/srs/ReactBaseClasses.js</span></span><br><span class="line">Component.prototype.setState = <span class="function"><span class="keyword">function</span>(<span class="params">partialState, callback</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.updater.enqueueSetState(<span class="keyword">this</span>, partialState, callback, <span class="string">"setState"</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// react-reconciler/src/ReactFiberClassComponent.js</span></span><br><span class="line">enqueueSetState(inst, payload, callback) &#123;</span><br><span class="line">    ......</span><br><span class="line">    enqueueUpdate(fiber, update);</span><br><span class="line">    scheduleWork(fiber, expirationTime); <span class="comment">// 开始进行调度</span></span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>然后会执行到 workLoop 这个函数，其中 workInProgress 存储的就是一个 Fiber 节点的 alternate 属性。如果 workInProgress 存在就表示上次任务中断了，需要继续调度执行。<br>（WIP 树就是一个缓冲，它在 Reconciliation 完毕后一次性提交给浏览器进行渲染。它可以减少内存分配和垃圾回收，WIP 的节点不完全是新的，比如某颗子树不需要变动，React 会克隆复用旧树中的子树。<br>双缓存技术还有另外一个重要的场景就是异常的处理，比如当一个节点抛出异常，仍然可以继续沿用旧树的节点，避免整棵树挂掉。）</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">workLoopSync</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">while</span> (workInProgress !== <span class="literal">null</span>) &#123;</span><br><span class="line">    workInProgress = performUnitOfWork(workInProgress);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>可以看到 performUnitOfWork 的逻辑就是对当前节点的 fiber 节点和 fiber 节点的 alternate 属性进行 diff 计算，也是旧树和新树的 diff。diff 完看看有没有子节点，如果没有子节点则把更新先提交到父节点。然后再看有没有兄弟节点，如果有则返回出去当作下次遍历的节点。如果还是没有，说明整个 fiber 树已经遍历完了，则进入到回溯过程，把所有的更新都集中到根节点进行更新真实 dom。（具体的 diff 算法过程等下一篇博客再写）</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">performUnitOfWork</span>(<span class="params">unitOfWork: Fiber</span>): <span class="title">Fiber</span> | <span class="title">null</span> </span>&#123;</span><br><span class="line">  <span class="comment">// The current, flushed, state of this fiber is the alternate. Ideally</span></span><br><span class="line">  <span class="comment">// nothing should rely on this, but relying on it here means that we don't</span></span><br><span class="line">  <span class="comment">// need an additional field on the work in progress.</span></span><br><span class="line">  <span class="keyword">const</span> current = unitOfWork.alternate;</span><br><span class="line"></span><br><span class="line">  startWorkTimer(unitOfWork);</span><br><span class="line">  setCurrentDebugFiberInDEV(unitOfWork);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> next;</span><br><span class="line">  <span class="keyword">if</span> (enableProfilerTimer &amp;&amp; (unitOfWork.mode &amp; ProfileMode) !== NoMode) &#123;</span><br><span class="line">    startProfilerTimer(unitOfWork);</span><br><span class="line">    next = beginWork(current, unitOfWork, renderExpirationTime);</span><br><span class="line">    stopProfilerTimerIfRunningAndRecordDelta(unitOfWork, <span class="literal">true</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    next = beginWork(current, unitOfWork, renderExpirationTime);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  resetCurrentDebugFiberInDEV();</span><br><span class="line">  unitOfWork.memoizedProps = unitOfWork.pendingProps;</span><br><span class="line">  <span class="keyword">if</span> (next === <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="comment">// If this doesn't spawn new work, complete the current work.</span></span><br><span class="line">    next = completeUnitOfWork(unitOfWork);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ReactCurrentOwner.current = <span class="literal">null</span>;</span><br><span class="line">  <span class="keyword">return</span> next;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+  	
+					
+	  </div>     
+	  
+
+	<div class="post-footer">
+
+  <div class="post-footer-other">
+      <span class="post-footer-item">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img" src="/blog/images/wechat.png" alt="No Donate Image!">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img lazyload" src="/blog/images/placeholder.png" alt="No Donate Image!" data-src="/blog/images/avatar.png">	
+	</div>
+
+	<span class="donate-word"></span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+      </span>           
+      <span class="post-footer-item">
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=2837ebe4fd6c8"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		<div class="-mob-inner">
+		   			             
+            <a class="iconfont icon-share-qq -mob-share-link"></a>		
+     	   			             
+            <a class="iconfont icon-share-weixin -mob-share-link"></a>		
+     	   
+		</div>
+	</div>	
+
+      </span>           
+  </div>  
+
+  <div class="post-footer-meta">
+        	
+
+        
+          <i class="iconfont icon-tag"></i>     
+            <a class="tag-link" href="/blog/tags/react/">react</a>    
+        	
+  </div>
+
+</div>
+
+
+<nav class="post-footer-nav">
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/25787/" id="post-nav-newer" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">newer</strong>
+           
+          <a class="post-nav-title" href="/blog/posts/25787/">
+          React路由守卫和全局loading控制</a>
+      </a>
+    </div>
+  
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/17609/" id="post-nav-older" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">older</strong>
+        
+          <a class="post-nav-title" href="/blog/posts/17609/">
+          面试常问的操作系统知识</a>
+      </a>
+    </div>
+  
+</nav>
+ 
+	
+
+
+    <div id="comment">   
+    </div>
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+
+    <script src="//unpkg.com/valine@v1.1.8-beta/dist/Valine.min.js"></script>
+
+    <script>
+        new Valine({
+        av: AV,
+        el: '#comment',
+        notify:false, 
+        verify:false, 
+        app_id: '7kxu60nBeUEAJKLWktcgg0mz-9Nh9j0Va',
+        app_key: 'N40K3DuKj3WpLWwPJSbmuRyC',  
+        path:window.location.pathname, 
+        guest_info:['nick','mail'],
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!'
+        });
+    </script>
+	
+</article>
+
+	<div class="toc-container">
+			<div class="toc-sidebar">
+			<p class="toc-title">
+				CONTENT
+			</p>
+			<div class="toc-list">
+				<ol class="toc-inner"><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#Fiber-的使命"><span class="toc-inner-text">Fiber 的使命</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#何为-Fiber"><span class="toc-inner-text">何为 Fiber</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#requestIdleCallback"><span class="toc-inner-text">requestIdleCallback</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#任务优先级"><span class="toc-inner-text">任务优先级</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#Fiber-的数据结构"><span class="toc-inner-text">Fiber 的数据结构</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#源码分析"><span class="toc-inner-text">源码分析</span></a></li></ol>
+			</div>
+		</div>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">
+            <span class="search-cancel">
+                <i class="iconfont icon-cancel">
+            </i></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+    <div class="mobile-menu">
+  
+  <img class="mobile-menu-icon lazyload" src="/blog/images/placeholder.png" data-src="/blog/images/favicon.png">
+    
+
+  <a class="mobile-menu-link" href="/blog/">首页
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/archives">归档
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/tags">标签
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/about">关于
+  </a>
+    
+
+  <a class="mobile-menu-link mobile-menu-search" href="#">搜索
+  </a>
+   
+</div>
+        
+    
+
+
+
+     
+     
+
+<footer id="footer">
+  <div class="footer-copyright">
+    &copy;  2018-  2022 Keen King
+    <br>
+
+    Theme by
+    <a href="https://github.com/Lemonreds/hexo-theme-Nayo" target="_blank">Nayo</a>
+  </div>
+</footer>
+   
+
+  
+
+    <script src="/blog/nayo.bundle.js"></script>     
+    
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/blog/js/fireworks.js"></script>
+
+
+  </body>        
+</html>

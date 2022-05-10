@@ -1,0 +1,430 @@
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  
+  <title>  计算机组成原理——中央处理器 |   KeenKing的个人博客 </title>
+
+ 
+  
+    <link rel="icon" href="/blog/images/favicon.png">
+  
+
+
+  <link rel="stylesheet" href="/blog/nayo.min.css"> 
+</head>  
+  <body>   
+    
+      <head><meta name="generator" content="Hexo 3.9.0">
+  <meta name="referrer" content="no-referrer">
+</head>
+
+<header class="header">
+	
+  <nav class="header-nav">        
+
+    <span class="iconfont icon-menu mobile-toggle"></span>   	
+
+    <div class="header-logo">
+      <a href="/blog">
+        <img class="header-logo-img" src="/blog/images/favicon.png">
+      </a>
+    </div>
+
+    <div class="header-menu">          
+              
+          
+            <a class="header-menu-link" id="header-menu-home" href="/blog/">
+              <i class="iconfont icon-home">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-archives" href="/blog/archives">
+              <i class="iconfont icon-archives">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-tags" href="/blog/tags">
+              <i class="iconfont icon-tags">  
+            </i></a>     
+          
+              
+          
+            <a class="header-menu-link" id="header-menu-about" href="/blog/about">
+              <i class="iconfont icon-about">  
+            </i></a>     
+          
+              
+          
+              <a class="header-menu-link" id="header-menu-search">
+                <i class="iconfont icon-search">  
+              </i></a>
+          
+                  
+    </div>  
+    
+  </nav>
+</header>
+
+   
+
+      <div class="container">       
+          
+          
+            <section class="main">  
+          
+
+          <article class="post">
+  
+	<div class="post-header">
+  <p class="post-title">
+    计算机组成原理——中央处理器
+  </p>
+
+  <div class="meta-info">
+    <span>
+      1月 06, 2019
+    </span>
+
+     
+    <i class="iconfont icon-words"></i>
+    <span>
+      4200
+    </span>
+    
+  </div>
+</div>
+ 
+	 
+
+	  <div class="typo post-content slideDownMin">
+
+		
+
+			
+					<h2 id="CPU-的组成与功能"><a href="#CPU-的组成与功能" class="headerlink" title="CPU 的组成与功能"></a>CPU 的组成与功能</h2><p>CPU 的基本部分由运算器和控制器 2 个主要部分组成。</p>
+<h3 id="控制器"><a href="#控制器" class="headerlink" title="控制器"></a>控制器</h3><p>控制器由程序计数器、指令寄存器、指令译码器、地址寄存器、时序产生器、操作控制器组成。是发布命令的决策机构。</p>
+<a id="more"></a>
+<p><strong>控制器中的主要寄存器</strong></p>
+<ul>
+<li>程序计数器<br>存放指令的地址（当前指令或者下一条指令地址）</li>
+<li>地址寄存器(AR，Address Register)<br>用来保存当前 CPU 所访问的内存单元的地址</li>
+<li>指令寄存器(IR，Instruction Register)<br>用来保存当前正在执行的一条指令。</li>
+<li>指令译码器（ID）<br>对指令寄存器中的操作码字段进行分析，识别该指令规定的操作，向操作控制器发出具体操作的特定信号。<br><strong>控制器的主要作用：</strong></li>
+</ul>
+<ol>
+<li>取指令：从主存储器中取出一条指令</li>
+<li>指令译码：对当前取得的指令进行分析</li>
+<li>控制指令执行：根据分析指令时产生的操作命令和操作数地址形成相应的操作控制序列，通过运算器、存储器以及输入输出设备的执行，实现每条指令的功能。<br><em>CPU 不断重复执行取指、译码、执行，直至遇到停机或外来的干预。</em></li>
+<li>控制程序和数据的输入与结果输出</li>
+<li>处理异常情况和请求</li>
+</ol>
+<h3 id="运算器"><a href="#运算器" class="headerlink" title="运算器"></a>运算器</h3><p>运算器由算术逻辑单元、累加寄存器、数据缓冲寄存器、状态标志寄存器组成。运算器所进行的全部操作都是由控制器发出的控制信号来指挥的。它是<strong>执行部件</strong>。</p>
+<ol>
+<li>算术逻辑单元（ALU）<br>主要负责实现对数据的算术运算和逻辑运算</li>
+<li>累加寄存器（AC）<br>暂时存放参加 ALU 运算的操作数据和结果的部件，是一个通用寄存器</li>
+<li>数据缓冲寄存器（DR）<br>暂时存放从主存储器、输入/输出设备读来的数据或者准备写入它们的数据<br>数据缓冲寄存器的作用是 ：<br>(1)作为 CPU 和内存、外部设备之间信息传送的中转站；<br>(2)补偿 CPU 和内存、外围设备之间在操作速度上的差别；<br>(3)在单累加器结构的运算器中，数据缓冲寄存器还可兼作为操作数寄存器。</li>
+<li>状态标志寄存器<br>用来保存由算术指令和逻辑指令运行或测试的结果而建立的各种条件码内容。如运算结果进位标志、运算结果溢出标志、运算结果为 0 标志、运算结果为负标志等。除此之外，状态标志寄存器还用来保存中断和系统工作状态等信息，以便 CPU 和系统能及时了解机器运行状态和程序运行状态。</li>
+</ol>
+<h3 id="CPU-的功能"><a href="#CPU-的功能" class="headerlink" title="CPU 的功能"></a>CPU 的功能</h3><p>指令控制<br>操作控制<br>时间控制<br>数据加工</p>
+<hr>
+<h2 id="操作控制器"><a href="#操作控制器" class="headerlink" title="操作控制器"></a>操作控制器</h2><ul>
+<li><strong>数据通路</strong>是许多寄存器之间传送信息的通路。<br>信息从什么地方开始，中间经过哪个寄存器或多路开关，最后传送到哪个寄存器，都要加以控制。<br>在各寄存器之间建立数据通路的任务，是由称为操作控制器的部件来完成的。</li>
+<li>操作控制器的功能<br>根据指令操作码和时序信号，产生各种操作控制信号，以便正确地建立数据通路，从而完成取指令和执行指令的控制。</li>
+</ul>
+<p>根据设计方法不同，操作控制器可分为三种：</p>
+<ul>
+<li>硬布线控制器<br>是采用时序逻辑技术来实现的；</li>
+<li>微程序控制器<br>是采用存储逻辑来实现的；</li>
+<li>门阵列控制器<br>前两种方式的组合</li>
+</ul>
+<hr>
+<h2 id="时序产生器"><a href="#时序产生器" class="headerlink" title="时序产生器"></a>时序产生器</h2><h3 id="指令周期"><a href="#指令周期" class="headerlink" title="指令周期"></a>指令周期</h3><p><img src="http://ww1.sinaimg.cn/large/005ZR24Xly1g0ry59eiouj313q0sk48w.jpg" alt></p>
+<p>非访问主存储器指令的指令周期<br>直接访问主存储器指令的指令周期<br>间接访问主存储器指令的指令周期<br>程序控制指令的指令周期<br>（见书本）</p>
+<h3 id="时序信号的作用和体制"><a href="#时序信号的作用和体制" class="headerlink" title="时序信号的作用和体制"></a>时序信号的作用和体制</h3><ul>
+<li>CPU 能很容易通过时序控制信号从时间和空间上识别出是数据还是指令。<br>从<strong>时间</strong>来说，取指令发生在指令周期的第一个 cpu 周期，即发生在“取指令”阶段，而取数据事件发生在指令周期后面几个 cpu 周期中，即发生在“执行指令”阶段。<br>从<strong>空间</strong>上来说，如果取出的代码还是指令那么一定送往指令寄存器，如果取出的代码是数据，那么一定送往运算器。</li>
+<li>计算机硬件的器件特性决定了时序信号最基本的体制是电位—脉冲制。</li>
+<li>时序信号的体制：<br><img src="http://ww1.sinaimg.cn/large/005ZR24Xly1g0ry62laauj310u0q2tj2.jpg" alt></li>
+<li>时序信号产生器的最基本的结构是一样的，都是由时钟源、环形脉冲发生器、节拍脉冲、读写时序译码逻辑、启停控制逻辑等部分组成</li>
+</ul>
+<hr>
+<h2 id="CPU-的控制方式"><a href="#CPU-的控制方式" class="headerlink" title="CPU 的控制方式"></a>CPU 的控制方式</h2><p>控制方式：形成控制不同操作序列的时序信号的方法</p>
+<h3 id="同步控制方式"><a href="#同步控制方式" class="headerlink" title="同步控制方式"></a>同步控制方式</h3><p>在任何情况下给定的指令在执行时所需的机器周期数和时钟周期数都固定不变的控制方式</p>
+<h3 id="异步控制方式"><a href="#异步控制方式" class="headerlink" title="异步控制方式"></a>异步控制方式</h3><p>每条指令、每个操作控制信号需要多少时间就占用多少时间<br>运行速度快、控制电路复杂</p>
+<h3 id="联合控制方式"><a href="#联合控制方式" class="headerlink" title="联合控制方式"></a>联合控制方式</h3><p>同步和异步的联合</p>
+<hr>
+<h2 id="微程序设计技术和微程序控制器"><a href="#微程序设计技术和微程序控制器" class="headerlink" title="微程序设计技术和微程序控制器"></a>微程序设计技术和微程序控制器</h2><p>微程序设计技术是利用软件方法进行硬件设计的技术<br>采用微程序设计思想的微程序控制器、同组合逻辑控制器相比较，具有规整、灵活、易维护等一系列优点。</p>
+<h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>若干条微命令编制成一条微指令，控制实现一步操作<br>就是按照设计解题程序的思路，把操作控制信号编成微指令，并将微指令代码存放到只读存储器里；当机器运行时，一条一条地读出这些微指令，产生计算机所需要的各种操作控制信号，使相应部件执行规定的操作。</p>
+<h3 id="微程序设计技术的基本概念"><a href="#微程序设计技术的基本概念" class="headerlink" title="微程序设计技术的基本概念"></a>微程序设计技术的基本概念</h3><ul>
+<li>微操作：指令执行时必须完成的基本操作。<br>例如，PC→AR，PC+1→ PC，RAM→IR。</li>
+<li>微命令：是组成微指令的最小单位，也就是控制微操作实现的控制信号。一般用于控制数据通路上门的打开/关闭，或者功能选择。</li>
+<li>微指令：是一组微命令的集合，用于完成一个功能相对完整的操作。</li>
+<li>微程序：微指令的有序集合，用于实现机器指令的功能。</li>
+<li>控制存储器（CM）属于 CPU：是存放微程序的存储器。该存储器主要存放控制命令和下一条执行的微指令地址。</li>
+<li>微指令寄存器（µIR）<br>用于存放现行微指令<br>微命令字段（微操作控制字段）：提供一步操作所需的微命令。<br>微地址字段（顺序控制字段）：指明后续微地址的形成方式，提供微地址的给定部分</li>
+<li>微指令的基本格式：<br><strong>操作控制部分</strong>：用来发出指挥计算机工作的控制信号。<br>可以用操作字段的每一位表示一个微命令，位信息为“1”表示发出微命令；位信息为“0”表示不发出微命令。<br>微命令信号既不能来得太早，也不能来得太晚，为此要求这些微命令信号还要加入时间控制。<br><strong>顺序控制部分</strong>：用来决定产生下一条微指令的地址。<br>顺序控制字段的若干位直接给出下一条微指令的地址，<br>其余各位则做为判别测试状态的标志，如标志为“0”表示不进行判别测试，直接按顺序控制字段给出的地址取下一条微指令；若标志为“1”表示要进行判别测试，根据测试结果，按要求修改相应的地址位信息，并按修改后的地址取下一条微指令。</li>
+<li>微地址形成电路<br>提供两类微地址<br>微程序入口地址：由机器指令操作码形成<br>后续微地址：由微地址字段、现行微地址、运行状态等形成。</li>
+<li>微指令周期与 CPU 周期的关系<br><img src="http://ww1.sinaimg.cn/large/005ZR24Xly1g0ry5oy34tj312y0sg49a.jpg" alt></li>
+</ul>
+<h3 id="微指令与机器指令的关系"><a href="#微指令与机器指令的关系" class="headerlink" title="微指令与机器指令的关系"></a>微指令与机器指令的关系</h3><ul>
+<li>一条机器指令对应一个微程序，这个微程序是由若干条微指令序列组成的。因此，一条机器指令的功能是由若干条微指令组成的序列来实现的。简言之，一条机器指令所完成的 操作划分成若干条微指令来完成，由微指令进行解释和执行。</li>
+<li>从指令与微指令，程序与微程序，地址与微地址的对应关系来看，前者与内存储器有关，后者与控制存储器有关。</li>
+<li>每一个 CPU 周期对应一条微指令。</li>
+</ul>
+<h3 id="微程序设计"><a href="#微程序设计" class="headerlink" title="微程序设计"></a>微程序设计</h3><p>微命令编码是指对微指令中的操作控制字段采用的表示方法。通常有以下三种方法</p>
+<ul>
+<li>直接表示法<br>其特点是操作控制字段中的 每一位代表一个微命令。这种方法的优点是简单直观，其输出直接用于控制。缺点是微指令字较长，因而使控制存储器容量较大。</li>
+<li>编码表示法<br>编码表示法是把一组相斥性的微命令信号组成一个小组(即一个字段) ，然后通过小组(字段）译码器对每一个微命令信号进行译码 ，译码输出作为操作控制信号，结构如图。</li>
+<li>混合表示法<br>这种方法是把直接表示法与字段编码法混合使用，以便能综合考虑指令字长、灵活性、速度等要求。</li>
+<li>常数字段控制法<br>这种方法在微指令中附设一个常数字段，就象指令中的立即数一样，用它来给某些执行部件直接发送常数。该常数有时作为操作数送入 ALU 参加运算，有时也作为计数器的初值来控制微程序循环次数。</li>
+<li>微指令执行的顺序控制问题，实际上是如何确定下一条微指令的地址问题。通常，产生后继微地址有三种方法：<br>1）计数器方式<br>2）增量方式与断定方式相结合<br>3）多路转移方式</li>
+</ul>
+<h3 id="微指令格式"><a href="#微指令格式" class="headerlink" title="微指令格式"></a>微指令格式</h3><ul>
+<li>水平型微指令<br>一次能定义并执行多个并行操作微命令的微指令，叫做水平型微指令。</li>
+<li>垂直型微指令<br>微指令中设置微操作码字段，采用微操作码编译法，由微操作码规定微指令的功能 ，称为垂直型微指令。</li>
+</ul>
+<p><strong>水平型微指令与垂直型微指令的比较</strong><br>(1)水平型微指令并行操作能力强，效率高，灵活性强，垂直型微指令则较差。<br>(2)水平型微指令执行一条指令的时间短，垂直型微指令执行时间长。<br>(3)由水平型微指令解释指令的微程序，有微指令字较长而微程序短的特点。垂直型微指令则相反。<br>(4)水平型微指令用户难以掌握，而垂直型微指令与指令比较相似，相对来说，比较容易掌握。</p>
+<h3 id="串行-并行微程序控制"><a href="#串行-并行微程序控制" class="headerlink" title="串行/并行微程序控制"></a>串行/并行微程序控制</h3><ul>
+<li>串行微程序控制方式（顺序）<br>在串行微程序控制方式中，执行现行微指令的操作与取下一条微指令的操作在时间上是按顺序进行的，所以微指令周期=取微指令的时间+执行微操作的时间，即等于只读存储器的读数周期。</li>
+<li>并行微程序控制方式（时间上重叠）<br>就是将取微指令和执行微指令这两类操作在时间上重叠并行进行的方式。<br>由于取微指令和执行微指令的操作是在两个完全不同的部件中执行的，因此，可以将这两部分操作同时进行，以缩短微指令周期。</li>
+</ul>
+<h3 id="动态微程序设计"><a href="#动态微程序设计" class="headerlink" title="动态微程序设计"></a>动态微程序设计</h3><ul>
+<li>微程序设计有静态微程序设计和动态微程序设计之分。</li>
+<li>若计算机的机器指令只有一组微程序，而且这一组微程序设计好之后，一般无需改变而且也不易改变，那么这种微程序设计称为静态微程序设计。</li>
+<li>当采用 EPROM 作为控制存储器时，可以通过改变微指令和微程序来改变机器的指令系统，这种微程序设计称为动态微程序设计。</li>
+</ul>
+<h3 id="毫微程序设计"><a href="#毫微程序设计" class="headerlink" title="毫微程序设计"></a>毫微程序设计</h3><ul>
+<li>毫微程序是用以解释微程序的一种微程序，因此组成毫微程序的毫微指令就可看作是解释微指令的微指令。</li>
+<li>采用毫微程序设计的主要目的是减少控制存储器的容量。</li>
+<li>采用的是两级微程序设计方法。通常第一级采用垂直微程序，第二级采用水平微程序。</li>
+</ul>
+<hr>
+<h2 id="微程序控制器"><a href="#微程序控制器" class="headerlink" title="微程序控制器"></a>微程序控制器</h2><p>它主要由控制存储器、微指令寄存器和地址转移逻辑三大部分组成。</p>
+<hr>
+<h2 id="硬布线控制器"><a href="#硬布线控制器" class="headerlink" title="硬布线控制器"></a>硬布线控制器</h2><ul>
+<li>这种方法把控制部件作为产生专门固定时序控制信号的逻辑电路，而此逻辑电路以使用最少元件和取得最高操作速度为设计目标。</li>
+<li>因为该逻辑电路是由门电路和触发器构成的复杂树形网络，所以称为硬布线控制器。<br>硬布线控制器由组合逻辑网络</li>
+</ul>
+<hr>
+<h2 id="几个问题"><a href="#几个问题" class="headerlink" title="几个问题"></a>几个问题</h2><ul>
+<li>如何缩短微指令字的长度？<br>采用混合编码译码控制法</li>
+<li>如何减小控制存储器的容量？<br>采用毫微程序设计</li>
+<li>如何减少微程序长度？<br>水平型微指令</li>
+<li>如何提高微程序的执行速度？<br>水平型微指令</li>
+<li>如何易于修改微指令？<br>动态微程序设计</li>
+<li>如何增加微程序设计的灵活性？<br>两级微程序设计，第一层垂直型，第二层水平型</li>
+</ul>
+  	
+					
+	  </div>     
+	  
+
+	<div class="post-footer">
+
+  <div class="post-footer-other">
+      <span class="post-footer-item">
+        
+
+
+
+
+<span class="donate-btn">
+	<span class="iconfont icon-donate"></span>
+</span>
+
+
+<div id="donate-box" class="sildeUpMin">
+
+	<span class="donate-cancel iconfont icon-cancel"></span>
+
+	<div class="donate-img-box">
+		<img id="donate-qr-wechat" class="noLazyLoad donate-img" src="/blog/images/wechat.png" alt="No Donate Image!">	
+		<img id="donate-qr-alipay" class="noLazyLoad donate-img lazyload" src="/blog/images/placeholder.png" alt="No Donate Image!" data-src="/blog/images/avatar.png">	
+	</div>
+
+	<span class="donate-word"></span>
+
+	<div class="donate-list">
+		<span class="iconfont icon-donate-wechat"></span>
+		<span class="iconfont icon-donate-alipay"></span>
+	</div>
+
+</div>
+
+ 
+      </span>           
+      <span class="post-footer-item">
+        
+	
+<script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js?appkey=2837ebe4fd6c8"></script>
+	
+	<span class="share-btn">
+	<span class="iconfont icon-share"></span>
+	</span>
+
+
+	<div class="-mob-share sildeUpMin">
+		<div class="-mob-inner">
+		   			             
+            <a class="iconfont icon-share-qq -mob-share-link"></a>		
+     	   			             
+            <a class="iconfont icon-share-weixin -mob-share-link"></a>		
+     	   
+		</div>
+	</div>	
+
+      </span>           
+  </div>  
+
+  <div class="post-footer-meta">
+        	
+
+        
+          <i class="iconfont icon-tag"></i>     
+            <a class="tag-link" href="/blog/tags/计算机组成原理/">计算机组成原理</a>    
+        	
+  </div>
+
+</div>
+
+
+<nav class="post-footer-nav">
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/8239/" id="post-nav-newer" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">newer</strong>
+           
+          <a class="post-nav-title" href="/blog/posts/8239/">
+          操作系统——引论</a>
+      </a>
+    </div>
+  
+  
+    <div class="post-footer-link">
+      <a href="/blog/posts/49447/" id="post-nav-older" class="post-nav-link-wrap">
+        <strong class="post-nav-caption">older</strong>
+        
+          <a class="post-nav-title" href="/blog/posts/49447/">
+          计算机组成原理——指令系统</a>
+      </a>
+    </div>
+  
+</nav>
+ 
+	
+
+
+    <div id="comment">   
+    </div>
+
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+
+    <script src="//unpkg.com/valine@v1.1.8-beta/dist/Valine.min.js"></script>
+
+    <script>
+        new Valine({
+        av: AV,
+        el: '#comment',
+        notify:false, 
+        verify:false, 
+        app_id: '7kxu60nBeUEAJKLWktcgg0mz-9Nh9j0Va',
+        app_key: 'N40K3DuKj3WpLWwPJSbmuRyC',  
+        path:window.location.pathname, 
+        guest_info:['nick','mail'],
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊!'
+        });
+    </script>
+	
+</article>
+
+	<div class="toc-container">
+			<div class="toc-sidebar">
+			<p class="toc-title">
+				CONTENT
+			</p>
+			<div class="toc-list">
+				<ol class="toc-inner"><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#CPU-的组成与功能"><span class="toc-inner-text">CPU 的组成与功能</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#控制器"><span class="toc-inner-text">控制器</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#运算器"><span class="toc-inner-text">运算器</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#CPU-的功能"><span class="toc-inner-text">CPU 的功能</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#操作控制器"><span class="toc-inner-text">操作控制器</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#时序产生器"><span class="toc-inner-text">时序产生器</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#指令周期"><span class="toc-inner-text">指令周期</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#时序信号的作用和体制"><span class="toc-inner-text">时序信号的作用和体制</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#CPU-的控制方式"><span class="toc-inner-text">CPU 的控制方式</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#同步控制方式"><span class="toc-inner-text">同步控制方式</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#异步控制方式"><span class="toc-inner-text">异步控制方式</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#联合控制方式"><span class="toc-inner-text">联合控制方式</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#微程序设计技术和微程序控制器"><span class="toc-inner-text">微程序设计技术和微程序控制器</span></a><ol class="toc-inner-child"><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#基本思想"><span class="toc-inner-text">基本思想</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#微程序设计技术的基本概念"><span class="toc-inner-text">微程序设计技术的基本概念</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#微指令与机器指令的关系"><span class="toc-inner-text">微指令与机器指令的关系</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#微程序设计"><span class="toc-inner-text">微程序设计</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#微指令格式"><span class="toc-inner-text">微指令格式</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#串行-并行微程序控制"><span class="toc-inner-text">串行/并行微程序控制</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#动态微程序设计"><span class="toc-inner-text">动态微程序设计</span></a></li><li class="toc-inner-item toc-inner-level-3"><a class="toc-inner-link" href="#毫微程序设计"><span class="toc-inner-text">毫微程序设计</span></a></li></ol></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#微程序控制器"><span class="toc-inner-text">微程序控制器</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#硬布线控制器"><span class="toc-inner-text">硬布线控制器</span></a></li><li class="toc-inner-item toc-inner-level-2"><a class="toc-inner-link" href="#几个问题"><span class="toc-inner-text">几个问题</span></a></li></ol>
+			</div>
+		</div>
+	</div>
+
+          </section> 
+      </div>            
+    
+    <a id="backTop">
+      <span>
+        <i class="iconfont icon-backtotop"></i>
+      </span>
+    </a> 
+
+  
+    
+    <div class="search-container sildeUpMin">
+        <div class="search-header">
+            <input type="text" placeholder="输入你想搜索的" id="search-input" class="search-input">
+            <span class="search-cancel">
+                <i class="iconfont icon-cancel">
+            </i></span>
+        </div>
+        <div id="search-result" class="search-result"></div>
+    </div>
+ 
+    <div class="mobile-menu">
+  
+  <img class="mobile-menu-icon lazyload" src="/blog/images/placeholder.png" data-src="/blog/images/favicon.png">
+    
+
+  <a class="mobile-menu-link" href="/blog/">首页
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/archives">归档
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/tags">标签
+  </a>
+    
+
+  <a class="mobile-menu-link" href="/blog/about">关于
+  </a>
+    
+
+  <a class="mobile-menu-link mobile-menu-search" href="#">搜索
+  </a>
+   
+</div>
+        
+    
+
+
+
+     
+     
+
+<footer id="footer">
+  <div class="footer-copyright">
+    &copy;  2018-  2022 Keen King
+    <br>
+
+    Theme by
+    <a href="https://github.com/Lemonreds/hexo-theme-Nayo" target="_blank">Nayo</a>
+  </div>
+</footer>
+   
+
+  
+
+    <script src="/blog/nayo.bundle.js"></script>     
+    
+    <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+    <script type="text/javascript" src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"></script>
+    <script src="/blog/js/fireworks.js"></script>
+
+
+  </body>        
+</html>
